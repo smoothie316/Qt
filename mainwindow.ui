@@ -380,7 +380,7 @@
   <customwidget>
    <class>MainTabClass</class>
    <extends>QTabWidget</extends>
-   <header>maintabclass.h</header>
+   <header>TabWidget/maintabclass.h</header>
    <container>1</container>
    <slots>
     <signal>signal1()</signal>
@@ -390,13 +390,13 @@
   <customwidget>
    <class>SubTabClass</class>
    <extends>QTabWidget</extends>
-   <header>subtabclass.h</header>
+   <header>TabWidget/subtabclass.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>FileClass</class>
    <extends>QPushButton</extends>
-   <header>fileclass.h</header>
+   <header>FileIO/fileclass.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
