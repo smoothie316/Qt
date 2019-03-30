@@ -172,7 +172,17 @@
                 </size>
                </property>
                <property name="text">
-                <string>L</string>
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>res/lasso.png</normaloff>res/lasso.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>25</width>
+                 <height>25</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -197,7 +207,17 @@
                 </size>
                </property>
                <property name="text">
-                <string>P</string>
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>res/brush.png</normaloff>res/brush.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>25</width>
+                 <height>25</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -222,7 +242,17 @@
                 </size>
                </property>
                <property name="text">
-                <string>E</string>
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>res/eraser-icon-vector-21679632.jpg</normaloff>res/eraser-icon-vector-21679632.jpg</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>25</width>
+                 <height>25</height>
+                </size>
                </property>
               </widget>
              </item>

@@ -29,16 +29,19 @@ SOURCES += \
         mainwindow.cpp \
         TabWidget/maintabclass.cpp \
         TabWidget/subtabclass.cpp \
-        FileIO/fileclass.cpp
+        FileIO/fileclass.cpp \
+    TabWidget/maintabpage.cpp
 
 HEADERS += \
         mainwindow.h \
         TabWidget/maintabclass.h \
         TabWidget/subtabclass.h \
-        FileIO/fileclass.h
+        FileIO/fileclass.h \
+    TabWidget/maintabpage.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    TabWidget/maintabpage.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
