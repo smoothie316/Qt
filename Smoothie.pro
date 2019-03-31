@@ -30,18 +30,23 @@ SOURCES += \
         TabWidget/maintabclass.cpp \
         TabWidget/subtabclass.cpp \
         FileIO/fileclass.cpp \
-    TabWidget/maintabpage.cpp
+    TabWidget/maintabpage.cpp \
+    Keyword/keyword.cpp \
+    Keyword/keywordinput.cpp
 
 HEADERS += \
         mainwindow.h \
         TabWidget/maintabclass.h \
         TabWidget/subtabclass.h \
         FileIO/fileclass.h \
-    TabWidget/maintabpage.h
+    TabWidget/maintabpage.h \
+    Keyword/keyword.h \
+    Keyword/keywordinput.h
 
 FORMS += \
         mainwindow.ui \
-    TabWidget/maintabpage.ui
+    TabWidget/maintabpage.ui \
+    Keyword/keywordinput.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

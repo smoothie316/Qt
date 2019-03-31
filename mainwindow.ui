@@ -329,6 +329,19 @@
            </widget>
           </item>
           <item>
+           <widget class="Keyword" name="KeywordInput">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Keyword</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -427,6 +440,11 @@
    <class>FileClass</class>
    <extends>QPushButton</extends>
    <header>FileIO/fileclass.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Keyword</class>
+   <extends>QPushButton</extends>
+   <header>Keyword/keyword.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
