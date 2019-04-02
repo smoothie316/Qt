@@ -5,9 +5,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 
-#include <vector>
-
-using namespace std;
+#include <QStringList>
 
 class FileClass : public QPushButton
 {
@@ -16,14 +14,13 @@ public:
     explicit FileClass(QWidget *parent = nullptr);
 
 signals:
-
+    void createImage(QStringList imageList);
 public slots:
     void clicked();
 
 private:
     QMessageBox box;
 
-    vector<QString> imgList;
 };
 
 #endif // FILECLASS_H

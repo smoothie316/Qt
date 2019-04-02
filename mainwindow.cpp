@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    connect(ui->FileOpen, SIGNAL(createImage(QStringList)), ui->MainTab, SLOT(createImage(QStringList)));
 }
 
 MainWindow::~MainWindow()

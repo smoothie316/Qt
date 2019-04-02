@@ -3,6 +3,11 @@
 
 #include <QWidget>
 #include <QTabWidget>
+#include <QImage>
+#include <QPixmap>
+#include <QLabel>
+
+#include <TabWidget/maintabpage.h>
 
 class MainTabClass : public QTabWidget
 {
@@ -13,6 +18,11 @@ public:
 signals:
 
 public slots:
+    void createImage(QStringList imageList);
+    void tabCloseRequested(int i);
+
+private:
+    MainTabPage* page;
 };
 
 #endif // MAINTABCLASS_H

@@ -2,6 +2,8 @@
 #define MAINTABPAGE_H
 
 #include <QWidget>
+#include <QPixmap>
+
 
 namespace Ui {
 class MainTabPage;
@@ -17,6 +19,9 @@ public:
 
 private:
     Ui::MainTabPage *ui;
+
+public:
+    void setImage(QPixmap *buffer);
 };
 
 #endif // MAINTABPAGE_H
