@@ -11,6 +11,7 @@ MainTabPage::MainTabPage(QWidget *parent) :
     ui(new Ui::MainTabPage)
 {
     ui->setupUi(this);
+
 }
 
 MainTabPage::~MainTabPage()
