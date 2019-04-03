@@ -21,7 +21,7 @@ private:
     Ui::MainTabPage *ui;
 
 public:
-    void setImage(QPixmap *buffer);
+    void setImage(QPixmap *bufferm, int w, int h);
 };
 
 #endif // MAINTABPAGE_H
