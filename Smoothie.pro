@@ -32,7 +32,10 @@ SOURCES += \
         FileIO/fileclass.cpp \
     TabWidget/maintabpage.cpp \
     Keyword/keyword.cpp \
-    Keyword/keywordinput.cpp
+    Keyword/keywordinput.cpp \
+    ToolBtn/toolbtn.cpp \
+    ToolBtn/setpaintwidget.cpp \
+    ToolBtn/settextwidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,12 +44,17 @@ HEADERS += \
         FileIO/fileclass.h \
     TabWidget/maintabpage.h \
     Keyword/keyword.h \
-    Keyword/keywordinput.h
+    Keyword/keywordinput.h \
+    ToolBtn/toolbtn.h \
+    ToolBtn/setpaintwidget.h \
+    ToolBtn/settextwidget.h
 
 FORMS += \
         mainwindow.ui \
     TabWidget/maintabpage.ui \
-    Keyword/keywordinput.ui
+    Keyword/keywordinput.ui \
+    ToolBtn/setpaintwidget.ui \
+    ToolBtn/settextwidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
