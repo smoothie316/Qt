@@ -2,6 +2,8 @@
 #define SETTEXTWIDGET_H
 
 #include <QDialog>
+#include <colorselect.h>
+#include <QDockWidget>
 
 namespace Ui {
 class SetTextWidget;
@@ -15,8 +17,15 @@ public:
     explicit SetTextWidget(QWidget *parent = nullptr);
     ~SetTextWidget();
 
+private slots:
+    void on_ColorSelect1_clicked();
+
+    void on_ColorSelect2_clicked();
+
 private:
     Ui::SetTextWidget *ui;
+    ColorSelect *cs;
+    QDockWidget *csDock;
 };
 
 #endif // SETTEXTWIDGET_H

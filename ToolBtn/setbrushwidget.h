@@ -1,13 +1,14 @@
 #ifndef SETBRUSHWIDGET_H
 #define SETBRUSHWIDGET_H
 
-#include <QDockWidget>
+#include <QDialog>
+#include <colorselect.h>
 
 namespace Ui {
 class SetBrushWidget;
 }
 
-class SetBrushWidget : public QDockWidget
+class SetBrushWidget : public QDialog
 {
     Q_OBJECT
 
@@ -17,6 +18,7 @@ public:
 
 private:
     Ui::SetBrushWidget *ui;
+    ColorSelect* cs;
 };
 
 #endif // SETBRUSHWIDGET_H

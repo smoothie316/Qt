@@ -2,6 +2,7 @@
 #define SETPAINTWIDGET_H
 
 #include <QDialog>
+#include <colorselect.h>
 
 namespace Ui {
 class SetPaintWidget;
@@ -17,6 +18,7 @@ public:
 
 private:
     Ui::SetPaintWidget *ui;
+    ColorSelect* cs;
 };
 
 #endif // SETPAINTWIDGET_H

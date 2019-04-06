@@ -221,7 +221,7 @@
                 <number>5</number>
                </property>
                <item row="0" column="1">
-                <widget class="QPushButton" name="Brush">
+                <widget class="ToolBtn" name="Brush">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -244,8 +244,8 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset>
-                   <normaloff>res/brush.png</normaloff>res/brush.png</iconset>
+                  <iconset resource="res.qrc">
+                   <normaloff>:/new/icon/res/brush.png</normaloff>:/new/icon/res/brush.png</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -256,7 +256,7 @@
                 </widget>
                </item>
                <item row="2" column="0">
-                <widget class="QPushButton" name="Erase">
+                <widget class="ToolBtn" name="Erase">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -279,8 +279,8 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset>
-                   <normaloff>res/eraser-icon-vector-21679632.jpg</normaloff>res/eraser-icon-vector-21679632.jpg</iconset>
+                  <iconset resource="res.qrc">
+                   <normaloff>:/new/icon/res/eraser-icon-vector-21679632.jpg</normaloff>:/new/icon/res/eraser-icon-vector-21679632.jpg</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -291,7 +291,7 @@
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QPushButton" name="Crop">
+                <widget class="ToolBtn" name="Crop">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -314,8 +314,8 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset>
-                   <normaloff>res/Crop.png</normaloff>res/Crop.png</iconset>
+                  <iconset resource="res.qrc">
+                   <normaloff>:/new/icon/res/Crop.png</normaloff>:/new/icon/res/Crop.png</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -326,7 +326,7 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QPushButton" name="Resize">
+                <widget class="ToolBtn" name="Resize">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -349,8 +349,8 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset>
-                   <normaloff>res/resize.jpeg</normaloff>res/resize.jpeg</iconset>
+                  <iconset resource="res.qrc">
+                   <normaloff>:/new/icon/res/resize.jpeg</normaloff>:/new/icon/res/resize.jpeg</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -361,7 +361,7 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QPushButton" name="Text">
+                <widget class="ToolBtn" name="Text">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -384,8 +384,8 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset>
-                   <normaloff>res/66759-200.png</normaloff>res/66759-200.png</iconset>
+                  <iconset resource="res.qrc">
+                   <normaloff>:/new/icon/res/66759-200.png</normaloff>:/new/icon/res/66759-200.png</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -419,8 +419,8 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset>
-                   <normaloff>res/lasso.png</normaloff>res/lasso.png</iconset>
+                  <iconset resource="res.qrc">
+                   <normaloff>:/new/icon/res/lasso.png</normaloff>:/new/icon/res/lasso.png</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -431,7 +431,7 @@
                 </widget>
                </item>
                <item row="3" column="0">
-                <widget class="QPushButton" name="Paint">
+                <widget class="ToolBtn" name="Paint">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -454,8 +454,8 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset>
-                   <normaloff>res/paint.jpeg</normaloff>res/paint.jpeg</iconset>
+                  <iconset resource="res.qrc">
+                   <normaloff>:/new/icon/res/paint.jpeg</normaloff>:/new/icon/res/paint.jpeg</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -631,7 +631,14 @@
    <extends>QPushButton</extends>
    <header>Keyword/keyword.h</header>
   </customwidget>
+  <customwidget>
+   <class>ToolBtn</class>
+   <extends>QPushButton</extends>
+   <header>ToolBtn/toolbtn.h</header>
+  </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

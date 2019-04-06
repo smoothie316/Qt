@@ -35,7 +35,11 @@ SOURCES += \
     Keyword/keywordinput.cpp \
     ToolBtn/toolbtn.cpp \
     ToolBtn/setpaintwidget.cpp \
-    ToolBtn/settextwidget.cpp
+    ToolBtn/settextwidget.cpp \
+    ToolBtn/seterasewidget.cpp \
+    ToolBtn/setbrushwidget.cpp \
+    colorselect.cpp
+
 
 HEADERS += \
         mainwindow.h \
@@ -47,16 +51,27 @@ HEADERS += \
     Keyword/keywordinput.h \
     ToolBtn/toolbtn.h \
     ToolBtn/setpaintwidget.h \
-    ToolBtn/settextwidget.h
+    ToolBtn/settextwidget.h \
+    ToolBtn/seterasewidget.h \
+    ToolBtn/setbrushwidget.h \
+    colorselect.h
+
 
 FORMS += \
         mainwindow.ui \
     TabWidget/maintabpage.ui \
     Keyword/keywordinput.ui \
     ToolBtn/setpaintwidget.ui \
-    ToolBtn/settextwidget.ui
+    ToolBtn/settextwidget.ui \
+    ToolBtn/seterasewidget.ui \
+    ToolBtn/setbrushwidget.ui \
+    colorselect.ui
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    res.qrc

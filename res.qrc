@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/new/icon">
+        <file>res/66759-200.png</file>
+        <file>res/brush.png</file>
+        <file>res/Crop.png</file>
+        <file>res/eraser-icon-vector-21679632.jpg</file>
+        <file>res/lasso.png</file>
+        <file>res/paint.jpeg</file>
+        <file>res/resize.jpeg</file>
+    </qresource>
+</RCC>

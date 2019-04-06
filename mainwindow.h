@@ -18,9 +18,6 @@ public:
 
 private slots:
 
-
-    void on_Paint_clicked();
-
 private:
     Ui::MainWindow *ui;
 };
