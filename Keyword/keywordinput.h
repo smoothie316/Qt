@@ -2,6 +2,10 @@
 #define KEYWORDINPUT_H
 
 #include <QDialog>
+#include <qfile.h>
+#include <QTextStream>
+#include <QDebug>
+#include <QCompleter>
 
 namespace Ui {
 class KeywordInput;
