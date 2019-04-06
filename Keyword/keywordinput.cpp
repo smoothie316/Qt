@@ -6,6 +6,10 @@ KeywordInput::KeywordInput(QWidget *parent) :
     ui(new Ui::KeywordInput)
 {
     ui->setupUi(this);
+    ui->comboBox->setAutoCompletion(false);
+    ui->comboBox->addItem("test");
+    ui->comboBox->addItem("abc");
+    ui->comboBox->addItem("acb");
 }
 
 KeywordInput::~KeywordInput()
