@@ -6,6 +6,12 @@ ColorSelect::ColorSelect(QWidget *parent) :
     ui(new Ui::ColorSelect)
 {
     ui->setupUi(this);
+
+    ui->widget->setStyleSheet(
+    {
+
+    }
+    );
 }
 
 ColorSelect::~ColorSelect()

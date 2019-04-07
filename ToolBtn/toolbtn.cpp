@@ -6,9 +6,13 @@ ToolBtn::ToolBtn(QWidget *parent) : QPushButton(parent)
 {
     connect(this, SIGNAL(clicked()), this, SLOT(clicked()));
     brushW = new SetBrushWidget();
+    brushW->setWindowTitle("Brush Options");
     paintW = new SetPaintWidget();
+    paintW->setWindowTitle("Paint Options");
     textW = new SetTextWidget();
-    EraseW = new setEraseWidget();
+    textW->setWindowTitle("Text Options");
+    eraseW = new setEraseWidget();
+    eraseW->setWindowTitle("Eraser Optinos");
 }
 
 void ToolBtn::clicked(){
@@ -17,33 +21,21 @@ void ToolBtn::clicked(){
     switch(this->getNumber(this->objectName())){
         case 1:
         {
-            QDockWidget* dock = new QDockWidget("Brush Set");
-            dock->setWidget(brushW);
-            dock->setFloating(true);
-            dock->show();
+            brushW->show();
             break;
         }
         case 2:
         {
-            QDockWidget* dock1 = new QDockWidget("Paint Set");
-            dock1->setWidget(paintW);
-            dock1->setFloating(true);
-            dock1->show();
+            paintW->show();
             break;
         }
         case 3:
         {
-            QDockWidget* dock2 = new QDockWidget("Text Set");
-            dock2->setWidget(textW);
-            dock2->setFloating(true);
-            dock2->show();
+            textW->show();
             break;
         }
         case 4:{
-            QDockWidget* dock3 = new QDockWidget("Erase Set");
-            dock3->setWidget(EraseW);
-            dock3->setFloating(true);
-            dock3->show();
+            eraseW->show();
             break;
         }
     }

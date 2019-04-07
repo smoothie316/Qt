@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QCompleter>
 
+
 namespace Ui {
 class KeywordInput;
 }
@@ -17,7 +18,9 @@ class KeywordInput : public QDialog
 
 public:
     explicit KeywordInput(QWidget *parent = nullptr);
-    ~KeywordInput();
+    ~KeywordInput() override;
+
+
 
 private:
     Ui::KeywordInput *ui;
