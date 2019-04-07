@@ -8,4 +8,8 @@
         <file>res/paint.jpeg</file>
         <file>res/resize.jpeg</file>
     </qresource>
+    <qresource prefix="/Class">
+        <file>coco.txt</file>
+        <file>table.html</file>
+    </qresource>
 </RCC>

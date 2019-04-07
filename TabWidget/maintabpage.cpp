@@ -20,9 +20,8 @@ MainTabPage::~MainTabPage()
 
 void MainTabPage::setImage(QPixmap* buffer, int w, int h){
     buf = buffer;
-    *buf = buf->scaled(w,h, Qt::KeepAspectRatio);
     QLabel* layer  = new QLabel(this->ui->MainEditContents);
-    layer->setPixmap(*buf);
+    layer->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
     layer->show();
     this->layerSet.push_back(layer);
 }
@@ -35,8 +34,7 @@ void MainTabPage::resizeEvent(QResizeEvent *event){
         for(size_t i=0; i<layerSet.size(); i++){
             layerSet[i]->setGeometry(0,0,w,h);
             layerSet[i]->clear();
-            *buf = buf->scaled(w,h,Qt::KeepAspectRatio);
-            layerSet[i]->setPixmap(*buf);
+            layerSet[i]->setPixmap(buf->scaled(w,h,Qt::KeepAspectRatio));
             layerSet[i]->show();
         }
     }

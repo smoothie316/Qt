@@ -3,7 +3,9 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QApplication>
+#include <QResource>
 #include <QUrl>
+#include <QFile>
 
 Keyword::Keyword(QWidget *parent) : QPushButton(parent)
 {
@@ -19,8 +21,12 @@ void Keyword::clicked(){
 
 bool Keyword::eventFilter(QObject *object, QEvent *event){
     if(object == keyInput && event->type() == QEvent::EnterWhatsThisMode){
+        // 파일 경로 설정문제
         QString filePath = QApplication::applicationDirPath();
-        QDesktopServices::openUrl(QUrl(filePath+"/table.html", QUrl::TolerantMode));
+        //QResource rc(":/Class/table.html");
+        //qDebug() << rc.absoluteFilePath();
+        QDesktopServices::openUrl(QUrl(filePath + "/table.html", QUrl::TolerantMode));
+        return true;
     }
     return false;
 }

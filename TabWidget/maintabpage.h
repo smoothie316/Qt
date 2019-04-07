@@ -17,7 +17,7 @@ class MainTabPage : public QWidget
 
 public:
     explicit MainTabPage(QWidget *parent = nullptr);
-    ~MainTabPaㅉge() override;
+    ~MainTabPage() override;
 
 protected:
     void resizeEvent(QResizeEvent* event) override;

@@ -1,6 +1,8 @@
 #include "keywordinput.h"
 #include "ui_keywordinput.h"
 
+#include <QResource>
+
 KeywordInput::KeywordInput(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::KeywordInput)
@@ -12,8 +14,7 @@ KeywordInput::KeywordInput(QWidget *parent) :
     completer->setCaseSensitivity( Qt::CaseInsensitive );
     ui->lnEdit->setCompleter( completer );
 
-    QString filePath = QApplication::applicationDirPath();
-    QFile file(filePath + "/coco.txt");
+    QFile file(":/Class/coco.txt");
 
     if(!file.open(QIODevice::ReadOnly|QIODevice::Text)){
         if(!file.exists()){
