@@ -1,6 +1,9 @@
 #include "keyword.h"
 #include <QEvent>
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QApplication>
+#include <QUrl>
 
 Keyword::Keyword(QWidget *parent) : QPushButton(parent)
 {
@@ -16,6 +19,8 @@ void Keyword::clicked(){
 
 bool Keyword::eventFilter(QObject *object, QEvent *event){
     if(object == keyInput && event->type() == QEvent::EnterWhatsThisMode){
-        // html파일 열기
+        QString filePath = QApplication::applicationDirPath();
+        QDesktopServices::openUrl(QUrl(filePath+"/table.html", QUrl::TolerantMode));
     }
+    return false;
 }
