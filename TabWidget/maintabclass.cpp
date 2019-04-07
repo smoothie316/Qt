@@ -4,8 +4,6 @@
 MainTabClass::MainTabClass(QWidget *parent) : QTabWidget(parent)
 {
     connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(tabCloseRequested(int)));
-
-
 }
 
 void MainTabClass::createImage(QStringList imageList){
@@ -30,6 +28,7 @@ void MainTabClass::createImage(QStringList imageList){
 
     }
 }
+
 
 void MainTabClass::tabCloseRequested(int i){
     this->removeTab(i);

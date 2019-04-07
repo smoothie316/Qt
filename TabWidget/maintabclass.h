@@ -6,6 +6,7 @@
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
+#include <QResizeEvent>
 
 #include <TabWidget/maintabpage.h>
 

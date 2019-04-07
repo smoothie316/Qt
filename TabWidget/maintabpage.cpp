@@ -2,16 +2,15 @@
 #include "ui_maintabpage.h"
 
 #include <QLabel>
-#include <QSizePolicy>
 #include <QMessageBox>
-
+#include <QResizeEvent>
 
 MainTabPage::MainTabPage(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainTabPage)
 {
     ui->setupUi(this);
-
+    buf= nullptr;
 }
 
 MainTabPage::~MainTabPage()
@@ -20,9 +19,25 @@ MainTabPage::~MainTabPage()
 }
 
 void MainTabPage::setImage(QPixmap* buffer, int w, int h){
-    *buffer = buffer->scaled(w,h, Qt::KeepAspectRatio);
-    QLabel* layer0  = new QLabel(this->ui->MainEditContents);
-    layer0->setPixmap(*buffer);
-    layer0->show();
+    buf = buffer;
+    *buf = buf->scaled(w,h, Qt::KeepAspectRatio);
+    QLabel* layer  = new QLabel(this->ui->MainEditContents);
+    layer->setPixmap(*buf);
+    layer->show();
+    this->layerSet.push_back(layer);
+}
 
+void MainTabPage::resizeEvent(QResizeEvent *event){
+    int w = event->size().width();
+    int h = event->size().height();
+    // 해상도 저하
+    if(!layerSet.empty()){
+        for(size_t i=0; i<layerSet.size(); i++){
+            layerSet[i]->setGeometry(0,0,w,h);
+            layerSet[i]->clear();
+            *buf = buf->scaled(w,h,Qt::KeepAspectRatio);
+            layerSet[i]->setPixmap(*buf);
+            layerSet[i]->show();
+        }
+    }
 }
