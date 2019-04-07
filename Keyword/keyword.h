@@ -16,6 +16,9 @@ signals:
 public slots:
     void clicked();
 
+protected:
+    bool eventFilter(QObject *object, QEvent *event) override;
+
 private:
     KeywordInput* keyInput;
 };
