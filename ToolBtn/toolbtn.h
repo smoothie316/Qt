@@ -24,7 +24,7 @@ private:
     SetBrushWidget* brushW;
     SetPaintWidget* paintW;
     SetTextWidget* textW;
-    setEraseWidget* EraseW;
+    setEraseWidget* eraseW;
 
 
 private:

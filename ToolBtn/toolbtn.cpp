@@ -6,9 +6,13 @@ ToolBtn::ToolBtn(QWidget *parent) : QPushButton(parent)
 {
     connect(this, SIGNAL(clicked()), this, SLOT(clicked()));
     brushW = new SetBrushWidget();
+    brushW->setWindowTitle("Brush Options");
     paintW = new SetPaintWidget();
+    paintW->setWindowTitle("Paint Options");
     textW = new SetTextWidget();
-    EraseW = new setEraseWidget();
+    textW->setWindowTitle("Text Options");
+    eraseW = new setEraseWidget();
+    eraseW->setWindowTitle("Eraser Optinos");
 }
 
 void ToolBtn::clicked(){
@@ -31,7 +35,7 @@ void ToolBtn::clicked(){
             break;
         }
         case 4:{
-            EraseW->show();
+            eraseW->show();
             break;
         }
     }
