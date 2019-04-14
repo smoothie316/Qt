@@ -10,6 +10,7 @@ SetPaintWidget::SetPaintWidget(QWidget *parent) :
     QGridLayout *grid = new QGridLayout();
     grid->addWidget(cs);
     ui->ColorBox->setLayout(grid);
+
 }
 
 SetPaintWidget::~SetPaintWidget()

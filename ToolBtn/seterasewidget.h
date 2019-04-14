@@ -15,6 +15,15 @@ public:
     explicit setEraseWidget(QWidget *parent = nullptr);
     ~setEraseWidget();
 
+private slots:
+    void on_SizeSlider_sliderMoved(int position);
+    void on_CircleRadio_clicked();
+    void on_RectRadio_clicked();
+    void on_SizeLineEdit_editingFinished();
+
+public:
+    int sliderPos;
+
 private:
     Ui::setEraseWidget *ui;
 };

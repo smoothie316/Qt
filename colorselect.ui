@@ -63,7 +63,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="BlackCheck">
+            <widget class="QRadioButton" name="BlackRadioBtn">
              <property name="text">
               <string/>
              </property>
@@ -81,7 +81,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="RedCheck">
+            <widget class="QRadioButton" name="RedRadioBtn">
              <property name="text">
               <string/>
              </property>
@@ -99,7 +99,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="GreenCheck">
+            <widget class="QRadioButton" name="GreenRadioBtn">
              <property name="text">
               <string/>
              </property>
@@ -117,7 +117,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="BlueCheck">
+            <widget class="QRadioButton" name="BlueRadioBtn">
              <property name="text">
               <string/>
              </property>
@@ -135,7 +135,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="YellowCheck">
+            <widget class="QRadioButton" name="YellowRadioBtn">
              <property name="text">
               <string/>
              </property>

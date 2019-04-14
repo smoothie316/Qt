@@ -10,6 +10,9 @@
 
 #include <TabWidget/maintabpage.h>
 
+#include <vector>
+using namespace std;
+
 class MainTabClass : public QTabWidget
 {
     Q_OBJECT
@@ -21,9 +24,11 @@ signals:
 public slots:
     void createImage(QStringList imageList);
     void tabCloseRequested(int i);
+    void recentTool(int btnNum);
 
 private:
     MainTabPage* page;
+    vector<MainTabPage*> pageList;
 };
 
 #endif // MAINTABCLASS_H

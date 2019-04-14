@@ -22,6 +22,10 @@ private slots:
 
     void on_ColorSelect2_clicked();
 
+    void on_fontComboBox_currentFontChanged(const QFont &f);
+
+    void on_SizeSlider_sliderMoved(int position);
+
 private:
     Ui::SetTextWidget *ui;
     ColorSelect *cs;

@@ -2,14 +2,15 @@
 #include "ui_maintabpage.h"
 
 #include <QLabel>
-#include <QMessageBox>
 #include <QResizeEvent>
+#include <QDebug>
 
 MainTabPage::MainTabPage(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainTabPage)
 {
     ui->setupUi(this);
+
     buf= nullptr;
 }
 
@@ -21,6 +22,7 @@ MainTabPage::~MainTabPage()
 void MainTabPage::setImage(QPixmap* buffer, int w, int h){
     buf = buffer;
     QLabel* layer  = new QLabel(this->ui->MainEditContents);
+    layer->setMouseTracking(true);
     layer->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
     layer->show();
     this->layerSet.push_back(layer);
@@ -38,4 +40,11 @@ void MainTabPage::resizeEvent(QResizeEvent *event){
             layerSet[i]->show();
         }
     }
+}
+
+void MainTabPage::mouseMoveEvent(QMouseEvent *event){
+
+}
+void MainTabPage::mousePressEvent(QMouseEvent *event){
+
 }

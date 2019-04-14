@@ -16,6 +16,12 @@ public:
     explicit SetBrushWidget(QWidget *parent = nullptr);
     ~SetBrushWidget();
 
+public:
+    int sliderPos;
+
+private slots:
+    void on_SizeSlider_sliderMoved(int position);
+
 private:
     Ui::SetBrushWidget *ui;
     ColorSelect* cs;

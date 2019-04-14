@@ -27,3 +27,13 @@ void SetTextWidget::on_ColorSelect2_clicked()
 {
     csDock->show();
 }
+
+void SetTextWidget::on_fontComboBox_currentFontChanged(const QFont &f)
+{
+
+}
+
+void SetTextWidget::on_SizeSlider_sliderMoved(int position)
+{
+
+}

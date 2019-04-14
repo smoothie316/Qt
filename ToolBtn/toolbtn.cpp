@@ -17,8 +17,9 @@ ToolBtn::ToolBtn(QWidget *parent) : QPushButton(parent)
 
 void ToolBtn::clicked(){
     // Brush, Paint, Text, Erase
-
-    switch(this->getNumber(this->objectName())){
+    int num = this->getNumber(this->objectName());
+    emit btnNumber(num);
+    switch(num){
         case 1:
         {
             brushW->show();

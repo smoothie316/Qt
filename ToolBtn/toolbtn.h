@@ -16,7 +16,7 @@ public:
     explicit ToolBtn(QWidget *parent = nullptr);
 
 signals:
-
+    void btnNumber(int);
 public slots:
     void clicked();
 

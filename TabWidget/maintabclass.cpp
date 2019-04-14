@@ -25,11 +25,16 @@ void MainTabClass::createImage(QStringList imageList){
         page = new MainTabPage();
         page->setImage(buffer, this->width(), this->height());
         this->addTab(page, imageList[i]);
-
+        pageList.push_back(page);
     }
 }
 
-
 void MainTabClass::tabCloseRequested(int i){
     this->removeTab(i);
+}
+
+void MainTabClass::recentTool(int btnNum){
+    for(size_t i=0; i<pageList.size(); i++){
+        pageList[i]->clickedTool = btnNum;
+    }
 }
