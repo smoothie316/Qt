@@ -2,9 +2,8 @@
 
 #include <QDockWidget>
 
-ToolBtn::ToolBtn(QWidget *parent) : QPushButton(parent)
+ToolBtn::ToolBtn(QWidget *parent) : QWidget(parent)
 {
-    connect(this, SIGNAL(clicked()), this, SLOT(clicked()));
     brushW = new SetBrushWidget();
     brushW->setWindowTitle("Brush Options");
     paintW = new SetPaintWidget();
@@ -13,47 +12,44 @@ ToolBtn::ToolBtn(QWidget *parent) : QPushButton(parent)
     textW->setWindowTitle("Text Options");
     eraseW = new setEraseWidget();
     eraseW->setWindowTitle("Eraser Optinos");
+    keyword = new Keyword();
+    keyword->setWindowTitle("Keyword input window");
 }
 
-void ToolBtn::clicked(){
-    // Brush, Paint, Text, Erase
-    int num = this->getNumber(this->objectName());
-    emit btnNumber(num);
-    switch(num){
-        case 1:
-        {
+void ToolBtn::recentTool(int i){
+    switch(i){
+        case 0:{
+            //Lasso
+            keyword->clicked();
+            break;
+        }
+        case 1:{
+            // brush
             brushW->show();
             break;
         }
-        case 2:
-        {
+        case 2:{
+            // paint
             paintW->show();
             break;
         }
-        case 3:
-        {
+        case 3:{
+            // text
             textW->show();
             break;
         }
         case 4:{
+            // eraser
             eraseW->show();
             break;
         }
+        case 5:{
+            // Crop
+            break;
+        }
+        case 6:{
+            // Resize
+            break;
+        }
     }
-}
-
-int ToolBtn::getNumber(QString str){
-    if(str == QString("Brush"))
-        return 1;
-    if(str == QString("Paint"))
-        return 2;
-    if(str == QString("Text"))
-        return 3;
-    if(str == QString("Erase"))
-        return 4;
-    if(str == QString("Crop"))
-        return 5;
-    if(str == QString("Resize"))
-        return 6;
-    return -1;
 }

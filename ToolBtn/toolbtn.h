@@ -2,33 +2,33 @@
 #define TOOLBTN_H
 
 #include <QWidget>
-#include <QPushButton>
 
 #include <ToolBtn/setbrushwidget.h>
 #include <ToolBtn/seterasewidget.h>
 #include <ToolBtn/setpaintwidget.h>
 #include <ToolBtn/settextwidget.h>
+#include <Keyword/keyword.h>
 
-class ToolBtn : public QPushButton
+class ToolBtn : public QWidget
 {
     Q_OBJECT
 public:
     explicit ToolBtn(QWidget *parent = nullptr);
 
 signals:
-    void btnNumber(int);
+
 public slots:
-    void clicked();
+    void recentTool(int i);
+
+public:
+
 
 private:
+    Keyword* keyword;
     SetBrushWidget* brushW;
     SetPaintWidget* paintW;
     SetTextWidget* textW;
     setEraseWidget* eraseW;
-
-
-private:
-    int getNumber(QString str);
 };
 
 #endif // TOOLBTN_H

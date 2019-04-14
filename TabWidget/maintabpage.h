@@ -7,6 +7,9 @@
 #include <QLabel>
 #include <QMouseEvent>
 
+#include <ToolBtn/toolbtn.h>
+#include <colorselect.h>
+
 using namespace std;
 namespace Ui {
 class MainTabPage;
@@ -26,11 +29,15 @@ protected:
     virtual void   mouseMoveEvent ( QMouseEvent * event ) override;
     virtual void   mousePressEvent ( QMouseEvent * event ) override;
     //virtual void   mouseReleaseEvent ( QMouseEvent * event );
+private slots:
 
 private:
     Ui::MainTabPage *ui;
     QPixmap* buf;
+    QPixmap* cursorPix;
     vector<QLabel*> layerSet;
+    ToolBtn* tools;
+
 public:
     /*
     Brush : 1
@@ -44,6 +51,7 @@ public:
 
 public:
     void setImage(QPixmap *bufferm, int w, int h);
+    void setMouseCursor();
 
 };
 

@@ -188,7 +188,7 @@
                 <number>5</number>
                </property>
                <item row="0" column="0">
-                <widget class="Keyword" name="Lasso">
+                <widget class="QPushButton" name="Lasso">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -223,7 +223,7 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="ToolBtn" name="Text">
+                <widget class="QPushButton" name="Text">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -258,7 +258,7 @@
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="ToolBtn" name="Resize">
+                <widget class="QPushButton" name="Resize">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -293,7 +293,7 @@
                 </widget>
                </item>
                <item row="0" column="2">
-                <widget class="ToolBtn" name="Crop">
+                <widget class="QPushButton" name="Crop">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -328,7 +328,7 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="ToolBtn" name="Brush">
+                <widget class="QPushButton" name="Brush">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -363,7 +363,7 @@
                 </widget>
                </item>
                <item row="1" column="2">
-                <widget class="ToolBtn" name="Erase">
+                <widget class="QPushButton" name="Erase">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -398,7 +398,7 @@
                 </widget>
                </item>
                <item row="2" column="0">
-                <widget class="ToolBtn" name="Paint">
+                <widget class="QPushButton" name="Paint">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -468,7 +468,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="FileClass" name="FileOpen">
+           <widget class="QPushButton" name="FileOpen">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -481,7 +481,7 @@
            </widget>
           </item>
           <item>
-           <widget class="FileClass" name="FileSave">
+           <widget class="QPushButton" name="FileSave">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -521,7 +521,7 @@
            <number>0</number>
           </property>
           <item row="0" column="0">
-           <widget class="MainTabClass" name="MainTab">
+           <widget class="QTabWidget" name="MainTab">
             <property name="currentIndex">
              <number>-1</number>
             </property>
@@ -579,7 +579,7 @@
            <number>0</number>
           </property>
           <item row="0" column="0">
-           <widget class="SubTabClass" name="SubTab">
+           <widget class="QTabWidget" name="SubTab">
             <property name="currentIndex">
              <number>-1</number>
             </property>
@@ -595,39 +595,6 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>MainTabClass</class>
-   <extends>QTabWidget</extends>
-   <header>TabWidget/maintabclass.h</header>
-   <container>1</container>
-   <slots>
-    <signal>signal1()</signal>
-    <slot>slot1()</slot>
-   </slots>
-  </customwidget>
-  <customwidget>
-   <class>SubTabClass</class>
-   <extends>QTabWidget</extends>
-   <header>TabWidget/subtabclass.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>FileClass</class>
-   <extends>QPushButton</extends>
-   <header>FileIO/fileclass.h</header>
-  </customwidget>
-  <customwidget>
-   <class>Keyword</class>
-   <extends>QPushButton</extends>
-   <header>Keyword/keyword.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ToolBtn</class>
-   <extends>QPushButton</extends>
-   <header>ToolBtn/toolbtn.h</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="res.qrc"/>
  </resources>

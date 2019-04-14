@@ -1,24 +1,39 @@
 #include "FileIO/fileclass.h"
 
-#include <QFileDialog>
+#include <QDebug>
 
-FileClass::FileClass(QWidget *parent) : QPushButton(parent)
+FileClass::FileClass(QWidget *parent) : QWidget(parent)
 {
-    connect(this, SIGNAL(clicked()), this, SLOT(clicked()));
+
 }
 
-void FileClass::clicked(){
-    if (this->objectName() == QString("FileOpen")){
-        // 파일 오픈 코드. 사용가능한 확장자 지정 필요(strFilter).
-        // jpg, jpeg, png, bmp
-        // 파일 복수선택 가능하게 만들기
-        QString strFilter = "JPG image file (*.jpg) ;; JPEG image file (*.jpeg) ;; PNG image file (*.png);; BMP image file (*.bmp)";
-        QStringList tmpStr = QFileDialog::getOpenFileNames(this, "Image", QDir::homePath(), strFilter);
-        if(!tmpStr.isEmpty()){
-            emit createImage(tmpStr);
+QStringList FileClass::keywordFileRead(){
+    // keyword file read
+    QFile file(":/Class/coco.txt");
+    if(!file.open(QIODevice::ReadOnly|QIODevice::Text)){
+        if(!file.exists()){
+            qDebug() << "No file";
+        }
+        else {
+            qDebug() << "why";
         }
     }
-    else if(this->objectName() == QString("FileSave")){
-        // 파일 저장 코드 작성
+    QTextStream in(&file);
+    while(!in.atEnd()){
+        QString line = in.readLine();
+        keywordList.push_back(line);
+    }
+    // keyword file read end
+    return keywordList;
+}
+
+void FileClass::ImageOpen(){
+    // jpg, jpeg, png, bmp
+    QString strFilter = "JPG image file (*.jpg) ;; JPEG image file (*.jpeg) ;; PNG image file (*.png);; BMP image file (*.bmp)";
+    QStringList tmpStr = QFileDialog::getOpenFileNames(this, "Image", QDir::homePath(), strFilter);
+    if(!tmpStr.isEmpty())
+        emit createImage(tmpStr);
+    else {
+        // 파일 열기 실패
     }
 }

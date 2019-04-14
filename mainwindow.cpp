@@ -2,25 +2,19 @@
 #include "ui_mainwindow.h"
 
 #include <QDebug>
-#include <ToolBtn/toolbtn.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(ui->FileOpen, SIGNAL(createImage(QStringList)), ui->MainTab, SLOT(createImage(QStringList)));
+    this->tabs = new TabClass();
+    this->fileIO = new FileClass();
+    connect(fileIO, SIGNAL(createImage(QStringList)), tabs, SLOT(mainCreateImage(QStringList)));
+    connect(tabs, SIGNAL(addMainTab(QWidget*, QString)), this, SLOT(addMainTab(QWidget*, QString)));
 
-    connect(ui->Crop, SIGNAL(btnNumber(int)), this, SLOT(btnNumber(int)));
-    connect(ui->Text, SIGNAL(btnNumber(int)), this, SLOT(btnNumber(int)));
-    connect(ui->Brush, SIGNAL(btnNumber(int)), this, SLOT(btnNumber(int)));
-    connect(ui->Erase, SIGNAL(btnNumber(int)), this, SLOT(btnNumber(int)));
-    connect(ui->Paint, SIGNAL(btnNumber(int)), this, SLOT(btnNumber(int)));
-    connect(ui->Resize, SIGNAL(btnNumber(int)), this, SLOT(btnNumber(int)));
-    this->recentClickedTool = 1;
-    emit recentTool(this->recentClickedTool);
-
-    connect(this, SIGNAL(recentTool(int)), ui->MainTab, SLOT(recentTool(int)));
+    this->tools = new ToolBtn();
+    connect(this, SIGNAL(recentTool(int)), tools, SLOT(recentTool(int)));
 }
 
 MainWindow::~MainWindow()
@@ -28,7 +22,43 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::btnNumber(int btnNum){
-    this->recentClickedTool = btnNum;
+void MainWindow::addMainTab(QWidget* page, QString name){
+    ui->MainTab->addTab(page, name);
+}
+
+void MainWindow::on_MainTab_tabCloseRequested(int index){
+    // 이미지 파일 저장 관련 수행 필요
+    ui->MainTab->removeTab(index);
+}
+
+void MainWindow::on_FileOpen_clicked(){
+    fileIO->ImageOpen();
+}
+void MainWindow::on_Lasso_clicked(){
+    this->recentClickedTool = 0;
+    emit recentTool(this->recentClickedTool);
+}
+void MainWindow::on_Brush_clicked(){
+    this->recentClickedTool = 1;
+    emit recentTool(this->recentClickedTool);
+}
+void MainWindow::on_Paint_clicked(){
+    this->recentClickedTool = 2;
+    emit recentTool(this->recentClickedTool);
+}
+void MainWindow::on_Text_clicked(){
+    this->recentClickedTool = 3;
+    emit recentTool(this->recentClickedTool);
+}
+void MainWindow::on_Erase_clicked(){
+    this->recentClickedTool = 4;
+    emit recentTool(this->recentClickedTool);
+}
+void MainWindow::on_Crop_clicked(){
+    this->recentClickedTool = 5;
+    emit recentTool(this->recentClickedTool);
+}
+void MainWindow::on_Resize_clicked(){
+    this->recentClickedTool = 6;
     emit recentTool(this->recentClickedTool);
 }

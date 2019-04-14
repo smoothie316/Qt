@@ -2,12 +2,11 @@
 #define FILECLASS_H
 
 #include <QWidget>
-#include <QPushButton>
-#include <QMessageBox>
-
+#include <QFileDialog>
+#include <QFile>
 #include <QStringList>
 
-class FileClass : public QPushButton
+class FileClass : public QWidget
 {
     Q_OBJECT
 public:
@@ -16,11 +15,14 @@ public:
 signals:
     void createImage(QStringList imageList);
 public slots:
-    void clicked();
+
+public:
+    void ImageOpen();
+public:
+    QStringList keywordFileRead();
 
 private:
-    QMessageBox box;
-
+    QStringList keywordList;
 };
 
 #endif // FILECLASS_H

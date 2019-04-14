@@ -2,11 +2,6 @@
 #define KEYWORDINPUT_H
 
 #include <QDialog>
-#include <qfile.h>
-#include <QTextStream>
-#include <QDebug>
-#include <QCompleter>
-
 
 namespace Ui {
 class KeywordInput;
@@ -19,8 +14,6 @@ class KeywordInput : public QDialog
 public:
     explicit KeywordInput(QWidget *parent = nullptr);
     ~KeywordInput() override;
-
-
 
 private:
     Ui::KeywordInput *ui;

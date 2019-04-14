@@ -2,10 +2,9 @@
 #define KEYWOR_H
 
 #include <QWidget>
-#include <QPushButton>
 #include <Keyword/keywordinput.h>
 
-class Keyword : public QPushButton
+class Keyword : public QWidget
 {
     Q_OBJECT
 public:
@@ -14,6 +13,9 @@ public:
 signals:
 
 public slots:
+
+
+public:
     void clicked();
 
 protected:

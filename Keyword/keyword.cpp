@@ -1,17 +1,12 @@
 #include "keyword.h"
 #include <QEvent>
-#include <QMessageBox>
 #include <QDesktopServices>
 #include <QApplication>
-#include <QResource>
 #include <QUrl>
-#include <QFile>
 
-Keyword::Keyword(QWidget *parent) : QPushButton(parent)
+Keyword::Keyword(QWidget *parent) : QWidget(parent)
 {
-    connect(this, SIGNAL(clicked()), this, SLOT(clicked()));
     keyInput = new KeywordInput();
-
 }
 
 void Keyword::clicked(){

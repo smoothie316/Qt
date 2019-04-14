@@ -14,6 +14,11 @@ class ColorSelect : public QWidget
 public:
     explicit ColorSelect(QWidget *parent = nullptr);
     ~ColorSelect();
+signals:
+    void sliderMoved(int position, int RGBInfo);
+    // 0: Red, 1: Green, 2:Blue, 3: alpha
+
+    void radioClicked(int r, int g, int b);
 
 private slots:
     void on_RedSlider_sliderMoved(int position);
@@ -25,11 +30,25 @@ private slots:
     void on_BlueRadioBtn_clicked();
     void on_YellowRadioBtn_clicked();
 
+    void on_AlphaSlider_sliderMoved(int position);
+
+public:
+    void getRGB(int &R, int &G, int &B, int &A);
+    void setRGB(int R, int G, int B, int A);
+
+private:
+    void removeCheck(int i);
+
 private:
     Ui::ColorSelect *ui;
+    int radioNum  = -1;
+    int radioNumOld = 0;
+    bool deleteCheck = false;
 
 public:
     int R,G,B;
+    int alpha;
+
 };
 
 #endif // COLORSELECT_H

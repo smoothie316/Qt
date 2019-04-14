@@ -2,6 +2,13 @@
 #include "ui_keywordinput.h"
 
 #include <QResource>
+#include <QStringList>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+#include <QCompleter>
+
+#include <FileIO/fileclass.h>
 
 KeywordInput::KeywordInput(QWidget *parent) :
     QDialog(parent),
@@ -14,25 +21,13 @@ KeywordInput::KeywordInput(QWidget *parent) :
     completer->setCaseSensitivity( Qt::CaseInsensitive );
     ui->lnEdit->setCompleter( completer );
 
-    QFile file(":/Class/coco.txt");
+    FileClass file;
+    QStringList keywordList = file.keywordFileRead();
 
-    if(!file.open(QIODevice::ReadOnly|QIODevice::Text)){
-        if(!file.exists()){
-            qDebug() << "No File";
-        }
-        else{
-            qDebug() << "why?";
-        }
-    }
-
-    QTextStream in(&file);
-
-    while(!in.atEnd()){
-        QString line = in.readLine();
-        ui->listWidget->addItem(line);
+    for(int i = 0; i < keywordList.length(); i++){
+        ui->listWidget->addItem(keywordList[i]);
         ui->lnEdit->clear();
     }
-
 }
 
 

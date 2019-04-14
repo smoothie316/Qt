@@ -27,45 +27,46 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        TabWidget/maintabclass.cpp \
-        TabWidget/subtabclass.cpp \
         FileIO/fileclass.cpp \
-    TabWidget/maintabpage.cpp \
-    Keyword/keyword.cpp \
-    Keyword/keywordinput.cpp \
-    ToolBtn/toolbtn.cpp \
-    ToolBtn/setpaintwidget.cpp \
-    ToolBtn/settextwidget.cpp \
-    ToolBtn/seterasewidget.cpp \
-    ToolBtn/setbrushwidget.cpp \
-    colorselect.cpp
+        TabWidget/maintabpage.cpp \
+        TabWidget/tabclass.cpp \
+        TabWidget/subtabpage.cpp \
+        Keyword/keyword.cpp \
+        Keyword/keywordinput.cpp \
+        ToolBtn/toolbtn.cpp \
+        ToolBtn/setpaintwidget.cpp \
+        ToolBtn/settextwidget.cpp \
+        ToolBtn/seterasewidget.cpp \
+        ToolBtn/setbrushwidget.cpp \
+        colorselect.cpp \
+
 
 
 HEADERS += \
         mainwindow.h \
-        TabWidget/maintabclass.h \
-        TabWidget/subtabclass.h \
         FileIO/fileclass.h \
-    TabWidget/maintabpage.h \
-    Keyword/keyword.h \
-    Keyword/keywordinput.h \
-    ToolBtn/toolbtn.h \
-    ToolBtn/setpaintwidget.h \
-    ToolBtn/settextwidget.h \
-    ToolBtn/seterasewidget.h \
-    ToolBtn/setbrushwidget.h \
-    colorselect.h
-
+        TabWidget/maintabpage.h \
+        TabWidget/tabclass.h \
+        TabWidget/subtabpage.h \
+        Keyword/keyword.h \
+        Keyword/keywordinput.h \
+        ToolBtn/toolbtn.h \
+        ToolBtn/setpaintwidget.h \
+        ToolBtn/settextwidget.h \
+        ToolBtn/seterasewidget.h \
+        ToolBtn/setbrushwidget.h \
+        colorselect.h \
 
 FORMS += \
         mainwindow.ui \
-    TabWidget/maintabpage.ui \
-    Keyword/keywordinput.ui \
-    ToolBtn/setpaintwidget.ui \
-    ToolBtn/settextwidget.ui \
-    ToolBtn/seterasewidget.ui \
-    ToolBtn/setbrushwidget.ui \
-    colorselect.ui
+        TabWidget/maintabpage.ui \
+        Keyword/keywordinput.ui \
+        ToolBtn/setpaintwidget.ui \
+        ToolBtn/settextwidget.ui \
+        ToolBtn/seterasewidget.ui \
+        ToolBtn/setbrushwidget.ui \
+        colorselect.ui \
+    TabWidget/subtabpage.ui
 
 
 # Default rules for deployment.

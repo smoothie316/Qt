@@ -11,7 +11,9 @@ MainTabPage::MainTabPage(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    buf= nullptr;
+    this->buf= nullptr;
+    this->clickedTool = 1;
+    this->setMouseCursor();
 }
 
 MainTabPage::~MainTabPage()
@@ -39,6 +41,12 @@ void MainTabPage::resizeEvent(QResizeEvent *event){
             layerSet[i]->setPixmap(buf->scaled(w,h,Qt::KeepAspectRatio));
             layerSet[i]->show();
         }
+    }
+}
+
+void MainTabPage::setMouseCursor(){
+    if(this->clickedTool == 4){
+
     }
 }
 
