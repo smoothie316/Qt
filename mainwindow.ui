@@ -21,9 +21,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="styleSheet">
-    <string notr="true"> #centralWidget{
-	background-color:#F5D6C6;
-}
+    <string notr="true">
 
 </string>
    </property>
