@@ -7,6 +7,7 @@
 Keyword::Keyword(QWidget *parent) : QWidget(parent)
 {
     keyInput = new KeywordInput();
+    connect(keyInput, SIGNAL(setEnd()), this, SLOT(setEndByKeyInput()));
 }
 
 void Keyword::clicked(){
@@ -24,4 +25,8 @@ bool Keyword::eventFilter(QObject *object, QEvent *event){
         return true;
     }
     return false;
+}
+
+void Keyword::setEndByKeyInput(){
+    emit setEnd();
 }

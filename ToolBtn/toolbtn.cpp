@@ -14,42 +14,14 @@ ToolBtn::ToolBtn(QWidget *parent) : QWidget(parent)
     eraseW->setWindowTitle("Eraser Optinos");
     keyword = new Keyword();
     keyword->setWindowTitle("Keyword input window");
+
+    connect(brushW, SIGNAL(setEnd()),this, SLOT(setEndSigByWidget()));
+    connect(paintW, SIGNAL(setEnd()),this, SLOT(setEndSigByWidget()));
+    connect(eraseW, SIGNAL(setEnd()),this, SLOT(setEndSigByWidget()));
+    connect(textW, SIGNAL(setEnd()),this, SLOT(setEndSigByWidget()));
+    connect(keyword, SIGNAL(setEnd()),this, SLOT(setEndSigByWidget()));
 }
 
-void ToolBtn::recentTool(int i){
-    switch(i){
-        case 0:{
-            //Lasso
-            keyword->clicked();
-            break;
-        }
-        case 1:{
-            // brush
-            brushW->show();
-            break;
-        }
-        case 2:{
-            // paint
-            paintW->show();
-            break;
-        }
-        case 3:{
-            // text
-            textW->show();
-            break;
-        }
-        case 4:{
-            // eraser
-            eraseW->show();
-            break;
-        }
-        case 5:{
-            // Crop
-            break;
-        }
-        case 6:{
-            // Resize
-            break;
-        }
-    }
+void ToolBtn::setEndSigByWidget(){
+    emit setEnd();
 }

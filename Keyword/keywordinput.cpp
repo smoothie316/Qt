@@ -36,3 +36,8 @@ KeywordInput::~KeywordInput()
     delete ui;
 }
 
+
+void KeywordInput::on_BackBtn_clicked()
+{
+    emit setEnd();
+}

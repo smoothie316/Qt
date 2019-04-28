@@ -16,19 +16,20 @@ public:
     explicit ToolBtn(QWidget *parent = nullptr);
 
 signals:
+    void setEnd();
 
 public slots:
-    void recentTool(int i);
+    void setEndSigByWidget();
 
 public:
-
-
-private:
     Keyword* keyword;
     SetBrushWidget* brushW;
     SetPaintWidget* paintW;
     SetTextWidget* textW;
     setEraseWidget* eraseW;
+
+private:
+
 };
 
 #endif // TOOLBTN_H

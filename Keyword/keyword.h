@@ -7,19 +7,27 @@
 class Keyword : public QWidget
 {
     Q_OBJECT
-public:
-    explicit Keyword(QWidget *parent = nullptr);
 
 signals:
+    void setEnd();
 
-public slots:
-
-
+// SLOT
+private slots:
+    void setEndByKeyInput();
+// 함수
 public:
+    explicit Keyword(QWidget *parent = nullptr);
     void clicked();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event) override;
+
+private:
+
+// 변수
+public:
+
+protected:
 
 private:
     KeywordInput* keyInput;

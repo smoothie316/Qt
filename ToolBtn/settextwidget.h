@@ -14,11 +14,10 @@ class SetTextWidget;
 class SetTextWidget : public QDialog
 {
     Q_OBJECT
+signals:
+    void setEnd();
 
-public:
-    explicit SetTextWidget(QWidget *parent = nullptr);
-    ~SetTextWidget();
-
+// SLOT
 private slots:
     void on_ColorSelect1_clicked();
     void on_ColorSelect2_clicked();
@@ -27,20 +26,22 @@ private slots:
     void RGBSliderMoved(int position, int RGBInfo);
     // 0 : Red, 1 : Green, 2 : Blue
     void colorRadioClicked(int R, int G, int B);
+    void on_pushButton_clicked();
 
-    void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
-
+// 함수    
 public:
+    explicit SetTextWidget(QWidget *parent = nullptr);
+    ~SetTextWidget();
     void getPaletteInfo(QBrush* text, QBrush* background);
-
-protected:
-    void closeEvent(QCloseEvent *event);
-
 
 private:
     void setNewPaletteInfo();
     void setPaletteInfo();
+
+// 변수
+public:
+
+protected:
 
 private:
     Ui::SetTextWidget *ui;
@@ -50,12 +51,8 @@ private:
     QDockWidget *csDockBack;
 
     int R, G, B, A;
-
     int textR, textG, textB, textA;
-    int newTextR, newTextG, newTextB, newTextA;
-
     int backR, backG, backB, backA;
-    int newBackR, newBackG, newBackB, newBackA;
 
     bool textBackgroundColor;
 

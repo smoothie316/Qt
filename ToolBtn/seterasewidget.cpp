@@ -24,20 +24,20 @@ setEraseWidget::~setEraseWidget()
 
 void setEraseWidget::on_SizeSlider_sliderMoved(int position)
 {
-    this->newEraserSize = position;
-    ui->SizeLineEdit->setText(QString::number(this->newEraserSize));
+    this->eraserSize = position;
+    ui->SizeLineEdit->setText(QString::number(this->eraserSize));
 }
 
 void setEraseWidget::on_CircleRadio_clicked()
 {
-    this->newCircleChecked = true;
-    this->newRectChecked = false;
+    this->circleChecked = true;
+    this->rectChecked = false;
 }
 
 void setEraseWidget::on_RectRadio_clicked()
 {
-    this->newCircleChecked = false;
-    this->newRectChecked = true;
+    this->circleChecked = false;
+    this->rectChecked = true;
 }
 
 void setEraseWidget::on_SizeLineEdit_editingFinished()
@@ -45,23 +45,7 @@ void setEraseWidget::on_SizeLineEdit_editingFinished()
 
 }
 
-void setEraseWidget::on_buttonBox_accepted()
+void setEraseWidget::on_pushButton_clicked()
 {
-    this->circleChecked = this->newCircleChecked;
-    this->rectChecked = this->newRectChecked;
-
-    this->eraserSize = this->newEraserSize;
-}
-
-void setEraseWidget::on_buttonBox_rejected()
-{
-    ui->CircleRadio->setChecked(this->circleChecked);
-    ui->RectRadio->setChecked(this->rectChecked);
-
-    ui->SizeLineEdit->setText(QString::number(this->eraserSize));
-    ui->SizeSlider->setValue(this->eraserSize);
-}
-
-void setEraseWidget::closeEvent(QCloseEvent *event){
-    this->on_buttonBox_rejected();
+    emit setEnd();
 }

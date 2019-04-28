@@ -11,25 +11,30 @@ class SetPaintWidget;
 class SetPaintWidget : public QDialog
 {
     Q_OBJECT
-
-public:
-    explicit SetPaintWidget(QWidget *parent = nullptr);
-    ~SetPaintWidget();
-
+signals:
+    void setEnd();
+// 슬롯
 private slots:
     void RGBSliderMoved(int position, int RGBInfo);
     // 0: Red, 1 : Green, 2 : Blue
     void colorRadioClicked(int R, int G, int B);
+    void on_pushButton_clicked();
 
-    void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
+// 함수
+public:
+    explicit SetPaintWidget(QWidget *parent = nullptr);
+    ~SetPaintWidget();
+
+
+private:
+
+// 변수
+public:
 protected:
-    void closeEvent(QCloseEvent *event);
 private:
     Ui::SetPaintWidget *ui;
     ColorSelect* cs;
     int R, G, B, A;
-    int newR, newG, newB, newA;
 };
 
 #endif // SETPAINTWIDGET_H

@@ -13,12 +13,10 @@ SetBrushWidget::SetBrushWidget(QWidget *parent) :
     grid->addWidget(cs);
     ui->ColorBox->setLayout(grid);
     cs->getRGB(this->R, this->G, this->B, this->A);
-    cs->getRGB(this->newR, this->newG, this->newB, this->newA);
 
     ui->SizeSlider->setRange(1,100);
     ui->SizeSlider->setValue(10);
     this->brushSize = ui->SizeSlider->value();
-    this->newBrushSize = this->brushSize;
     ui->SizeLineEdit->setText(QString::number(this->brushSize));
     qDebug() << this->brushSize;
     connect(cs, SIGNAL(sliderMoved(int, int)), this, SLOT(RGBSliderMoved(int, int)));
@@ -32,51 +30,37 @@ SetBrushWidget::~SetBrushWidget()
 
 void SetBrushWidget::on_SizeSlider_sliderMoved(int position)
 {
-    this->newBrushSize = position;
-    ui->SizeLineEdit->setText(QString::number(this->newBrushSize));
+    this->brushSize = position;
+    ui->SizeLineEdit->setText(QString::number(this->brushSize));
 }
 
 void SetBrushWidget::RGBSliderMoved(int position, int RGBInfo){
     switch(RGBInfo){
     case 0:
-        this->newR = position;
+        this->R = position;
         break;
     case 1:
-        this->newG = position;
+        this->G = position;
         break;
     case 2:
-        this->newB = position;
+        this->B = position;
         break;
     case 3:
-        this->newA = position;
+        this->A = position;
         break;
     }
-    qDebug() << QString::number(newR) + ", " + QString::number(newG) + ", " + QString::number(newB);
+    qDebug() << QString::number(R) + ", " + QString::number(G) + ", " + QString::number(B);
 }
 
 void SetBrushWidget::colorRadioClicked(int R, int G, int B){
-    this->newR = R;
-    this->newG = G;
-    this->newB = B;
-    this->newA = 255;
-    qDebug() << QString::number(newR) + ", " + QString::number(newG) + ", " + QString::number(newB);
+    this->R = R;
+    this->G = G;
+    this->B = B;
+    this->A = 255;
+    qDebug() << QString::number(R) + ", " + QString::number(G) + ", " + QString::number(B);
 }
 
-void SetBrushWidget::on_buttonBox_accepted(){
-    this->R = this->newR;
-    this->G = this->newG;
-    this->B = this->newB;
-    this->A = this->newA;
-    this->brushSize = this->newBrushSize;
-}
-
-void SetBrushWidget::on_buttonBox_rejected(){
-    cs->setRGB(this->R, this->G, this->B, this->A);
-
-    ui->SizeLineEdit->setText(QString::number(this->brushSize));
-    ui->SizeSlider->setValue(this->brushSize);
-}
-
-void SetBrushWidget::closeEvent(QCloseEvent *event){
-    this->on_buttonBox_rejected();
+void SetBrushWidget::on_pushButton_clicked()
+{
+    emit setEnd();
 }

@@ -11,7 +11,7 @@ SetTextWidget::SetTextWidget(QWidget *parent) :
 
     csText = new ColorSelect();
     csText->getRGB(this->textR, this->textG, this->textB, this->textA);
-    csText->getRGB(this->newTextR, this->newTextG, this->newTextB, this->newTextA);
+    csText->getRGB(this->textR, this->textG, this->textB, this->textA);
     csDockText = new QDockWidget("Text Color");
     csDockText->setWidget(csText);
     csDockText->setFloating(true);
@@ -22,7 +22,7 @@ SetTextWidget::SetTextWidget(QWidget *parent) :
     csBack = new ColorSelect();
     csBack->setRGB(255,255,255, 0);
     csBack->getRGB(this->backR, this->backG, this->backB, this->backA);
-    csBack->getRGB(this->newBackR, this->newBackG, this->newBackB, this->newBackA);
+    csBack->getRGB(this->backR, this->backG, this->backB, this->backA);
     csDockBack = new QDockWidget("Text Background Color");
     csDockBack->setWidget(csBack);
     csDockBack->setFloating(true);
@@ -67,37 +67,37 @@ void SetTextWidget::RGBSliderMoved(int position, int RGBInfo){
     case 0:
         this->R = position;
         if(this->textBackgroundColor){
-            this->newBackR = this->R;
+            this->backR = this->R;
         }
         else {
-            this->newTextR = this->R;
+            this->textR = this->R;
         }
         break;
     case 1:
         this->G = position;
         if(this->textBackgroundColor){
-            this->newBackG = this->G;
+            this->backG = this->G;
         }
         else {
-            this->newTextG = this->G;
+            this->textG = this->G;
         }
         break;
     case 2:
         this->B = position;
         if(this->textBackgroundColor){
-            this->newBackB = this->B;
+            this->backB = this->B;
         }
         else {
-            this->newTextB = this->B;
+            this->textB = this->B;
         }
         break;
     case 3:
         this->A = position;
         if(this->textBackgroundColor){
-            this->newBackA = this->A;
+            this->backA = this->A;
         }
         else {
-            this->newTextA = this->A;
+            this->textA = this->A;
         }
         break;
     }
@@ -111,16 +111,16 @@ void SetTextWidget::colorRadioClicked(int R, int G, int B){
     this->A = 255;
 
     if(this->textBackgroundColor){
-        this->newBackR = this->R;
-        this->newBackG = this->G;
-        this->newBackB = this->B;
-        this->newBackA = this->A;
+        this->backR = this->R;
+        this->backG = this->G;
+        this->backB = this->B;
+        this->backA = this->A;
     }
     else{
-        this->newTextR = this->R;
-        this->newTextG = this->G;
-        this->newTextB = this->B;
-        this->newTextA = this->A;
+        this->textR = this->R;
+        this->textG = this->G;
+        this->textB = this->B;
+        this->textA = this->A;
     }
 
     this->setNewPaletteInfo();
@@ -131,11 +131,11 @@ void SetTextWidget::setNewPaletteInfo(){
     QPalette paletteBack;
 
     //textColor
-    this->textBrush = new QBrush(QColor(this->newTextR, this->newTextG, this->newTextB, this->newTextA));
+    this->textBrush = new QBrush(QColor(this->textR, this->textG, this->textB, this->textA));
     this->textBrush->setStyle(Qt::SolidPattern);
 
     //black background
-    this->textBackgroundBrush = new QBrush(QColor(this->newBackR, this->newBackG, this->newBackB, this->newBackA));
+    this->textBackgroundBrush = new QBrush(QColor(this->backR, this->backG, this->backB, this->backA));
     this->textBackgroundBrush->setStyle(Qt::SolidPattern);
 
     //set white text
@@ -180,27 +180,7 @@ void SetTextWidget::setPaletteInfo(){
     ui->TextBackgroundColorLabel->show();
 }
 
-
-void SetTextWidget::on_buttonBox_accepted()
+void SetTextWidget::on_pushButton_clicked()
 {
-    this->textR = this->newTextR;
-    this->textG = this->newTextG;
-    this->textB = this->newTextB;
-    this->textA = this->newTextA;
-
-    this->backR = this->newBackR;
-    this->backG = this->newBackG;
-    this->backB = this->newBackB;
-    this->backA = this->newBackA;
-}
-
-void SetTextWidget::on_buttonBox_rejected()
-{
-    csText->setRGB(this->textR, this->textG, this->textB, this->textA);
-    csBack->setRGB(this->backR, this->backG, this->backB, this->backA);
-    this->setPaletteInfo();
-}
-
-void SetTextWidget::closeEvent(QCloseEvent *event) {
-    this->on_buttonBox_rejected();
+    emit setEnd();
 }

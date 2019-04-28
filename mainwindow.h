@@ -16,11 +16,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
 signals:
-    void recentTool(int recentToolBtn);
 
 private slots:
     void addMainTab(QWidget* page, QString name);
@@ -33,10 +29,18 @@ private slots:
     void on_Text_clicked();
     void on_Erase_clicked();
     void on_Paint_clicked();
+    void setEndByTools();
+
+// 함수
+public:
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+protected:
 
 private:
-    Ui::MainWindow *ui;
+    void changeToolPage();
 
+// 변수
 public:
   /* Lasso : 0
    * Brush : 1
@@ -46,10 +50,16 @@ public:
    * Crop  : 5
    * Resize: 6 */
     int recentClickedTool;
-
     TabClass* tabs;
     ToolBtn* tools;
     FileClass* fileIO;
+protected:
+
+private:
+    Ui::MainWindow *ui;
+    int H = -1, W = -1;
+    QWidget* widget;
+
 };
 
 #endif // MAINWINDOW_H
