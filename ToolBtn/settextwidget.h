@@ -53,6 +53,7 @@ private:
     int R, G, B, A;
     int textR, textG, textB, textA;
     int backR, backG, backB, backA;
+    int fontSize = 11;
 
     bool textBackgroundColor;
 

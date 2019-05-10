@@ -8,6 +8,9 @@ SetTextWidget::SetTextWidget(QWidget *parent) :
     ui(new Ui::SetTextWidget)
 {
     ui->setupUi(this);
+    this->ui->SizeSlider->setRange(1, 100);
+    this->ui->SizeSlider->setValue(this->fontSize);
+    this->ui->SizeLineEdit->setText(QString::number(this->fontSize));
 
     csText = new ColorSelect();
     csText->getRGB(this->textR, this->textG, this->textB, this->textA);
@@ -41,28 +44,25 @@ SetTextWidget::~SetTextWidget()
 }
 
 void SetTextWidget::on_ColorSelect1_clicked(){
-    csDockText->show();
+    csDockText->showNormal();
     this->textBackgroundColor = false;
 }
 
 void SetTextWidget::on_ColorSelect2_clicked(){
-    csDockBack->show();
+    csDockBack->showNormal();
     this->textBackgroundColor = true;
 }
 
 void SetTextWidget::on_fontComboBox_currentFontChanged(const QFont &f){
     //set font
-    QFont font;
-    font.setPointSize(32);
-    font.setBold(true);
 }
 
 void SetTextWidget::on_SizeSlider_sliderMoved(int position){
-
+    this->fontSize = position;
+    ui->SizeLineEdit->setText(QString::number(this->fontSize));
 }
 
 void SetTextWidget::RGBSliderMoved(int position, int RGBInfo){
-
     switch(RGBInfo){
     case 0:
         this->R = position;
