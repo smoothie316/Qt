@@ -112,6 +112,11 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout">
              <item>
+              <widget class="QStackedWidget" name="LayerWidget">
+               <widget class="QWidget" name="page"/>
+              </widget>
+             </item>
+             <item>
               <spacer name="verticalSpacer">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>

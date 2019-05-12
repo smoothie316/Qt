@@ -7,6 +7,9 @@
 #include <TabWidget/tabclass.h>
 #include <ToolBtn/toolbtn.h>
 #include <FileIO/fileclass.h>
+#include <vector>
+
+using namespace std;
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +23,7 @@ signals:
 
 private slots:
     void addMainTab(QWidget* page, QString name);
+    void addBuff();
     void on_MainTab_tabCloseRequested(int index);
     void on_FileOpen_clicked();
     void on_Lasso_clicked();
@@ -30,6 +34,9 @@ private slots:
     void on_Erase_clicked();
     void on_Paint_clicked();
     void setEndByTools();
+    void on_LayerCreate_clicked();
+    void on_LayerDel_clicked();
+    void on_MainTab_currentChanged(int index);
 
 // 함수
 public:
@@ -59,7 +66,13 @@ private:
     Ui::MainWindow *ui;
     int H = -1, W = -1;
     QWidget* widget;
+    int currentPage;
+    size_t totalPages;
 
+    vector<QLabel*> layers;
+    vector<vector<QLabel*>> layerInfo;
+
+    vector<vector<QPixmap*>> bufferList;
 };
 
 #endif // MAINWINDOW_H

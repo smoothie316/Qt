@@ -12,10 +12,14 @@ MainWindow::MainWindow(QWidget *parent) :
     this->fileIO = new FileClass();
     connect(fileIO, SIGNAL(createImage(QStringList)), tabs, SLOT(mainCreateImage(QStringList)));
     connect(tabs, SIGNAL(addMainTab(QWidget*, QString)), this, SLOT(addMainTab(QWidget*, QString)));
+    connect(tabs, SIGNAL(addBuff()), this, SLOT(addBuff()));
 
     this->tools = new ToolBtn();
     connect(tools, SIGNAL(setEnd()), this, SLOT(setEndByTools()));
     this->ui->ToolStack->setCurrentIndex(0);
+
+    this->currentPage = -1;
+    this->totalPages = 0;
 }
 
 MainWindow::~MainWindow()
@@ -24,6 +28,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::addMainTab(QWidget* page, QString name){
+    this->totalPages++;
     ui->MainTab->addTab(page, name);
 }
 
@@ -72,4 +77,56 @@ void MainWindow::changeToolPage(){
 void MainWindow::setEndByTools(){
     this->ui->ToolStack->removeWidget(this->ui->ToolStack->widget(1));
     this->ui->ToolStack->setCurrentIndex(0);
+}
+
+void MainWindow::on_LayerCreate_clicked()
+{
+    QLabel* label = new QLabel();
+    QPixmap* buffer = new QPixmap();
+    buffer->fill(Qt::white);
+    this->layerInfo[this->currentPage].push_back(label);
+}
+
+void MainWindow::on_LayerDel_clicked()
+{
+
+}
+
+void MainWindow::on_MainTab_currentChanged(int index)
+{
+    if(index != -1){
+        this->currentPage = index;
+        this->tabs->mainPageList.at(this->currentPage)->getLayerInfo(this->layers);
+        QWidget* widget = new QWidget();
+        QGridLayout* grid = new QGridLayout();
+        vector<QLabel*> tmpvec;
+
+        for(size_t i = 0; i<this->layers.size(); i++){
+            //grid->addWidget(this->layers[i]);
+            QLabel* label = new QLabel();
+            label->setPixmap(this->bufferList[this->currentPage][0]->scaled(ui->LayerGroup->width(), ui->LayerGroup->height(), Qt::KeepAspectRatio));
+            label->show();
+            tmpvec.push_back(label);
+        }
+        if(this->layerInfo.size() == this->totalPages){
+            for(size_t i =0; i < this->layers.size(); i++){
+                grid->addWidget(this->layerInfo[this->currentPage][i]);
+            }
+        }
+        else{
+            this->layerInfo.push_back(tmpvec);
+            for(size_t i =0; i< this->layers.size(); i++){
+                grid->addWidget(this->layerInfo[this->currentPage][i]);
+            }
+        }
+        widget->setLayout(grid);
+        ui->LayerWidget->addWidget(widget);
+        ui->LayerWidget->setCurrentIndex(this->currentPage+1);
+    }
+}
+
+void MainWindow::addBuff(){
+    vector<QPixmap*> tmp;
+    tmp.push_back(this->tabs->bufferList[this->tabs->bufferList.size()-1]);
+    this->bufferList.push_back(tmp);
 }

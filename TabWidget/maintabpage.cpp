@@ -23,7 +23,7 @@ MainTabPage::~MainTabPage()
 
 void MainTabPage::setImage(QPixmap* buffer, int w, int h){
     buf = buffer;
-    QLabel* layer  = new QLabel(this->ui->MainEditContents);
+    QLabel* layer = new QLabel(this->ui->MainEditContents);
     layer->setMouseTracking(true);
     layer->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
     layer->show();
@@ -55,4 +55,8 @@ void MainTabPage::mouseMoveEvent(QMouseEvent *event){
 }
 void MainTabPage::mousePressEvent(QMouseEvent *event){
 
+}
+
+void MainTabPage::getLayerInfo(vector<QLabel*>& layerList){
+    layerList.assign(this->layerSet.begin(), this->layerSet.end());
 }

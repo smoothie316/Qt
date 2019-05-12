@@ -18,6 +18,8 @@ void TabClass::mainCreateImage(QStringList imageList){
         if(img->load(imageList[i])){
             *buffer = QPixmap::fromImage(*img);
             *buffer = buffer->scaled(img->width(), img->height(), Qt::KeepAspectRatio);
+            bufferList.push_back(buffer);
+            emit addBuff();
         }
         else{
             // 파일 열기 실패
@@ -25,7 +27,7 @@ void TabClass::mainCreateImage(QStringList imageList){
 
         mainPage = new MainTabPage();
         mainPage->setImage(buffer, this->width(), this->height());
-        emit this->addMainTab(mainPage, imageList[i]);
         mainPageList.push_back(mainPage);
+        emit this->addMainTab(mainPage, imageList[i]);
     }
 }

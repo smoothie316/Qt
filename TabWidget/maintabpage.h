@@ -51,6 +51,8 @@ public:
 
 public:
     void setImage(QPixmap *bufferm, int w, int h);
+    void getLayerInfo(vector<QLabel*>& layerList);
+    void addLayer();
     void setMouseCursor();
 
 };

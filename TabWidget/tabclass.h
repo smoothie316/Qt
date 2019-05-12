@@ -17,15 +17,19 @@ public:
 
 signals:
     void addMainTab(QWidget* page, QString name);
+    void addBuff();
 
 public slots:
     void mainCreateImage(QStringList imageList);
-private:
+
+public:
     MainTabPage* mainPage;
     vector<MainTabPage*> mainPageList;
 
     SubTabPage* subPage;
     vector<SubTabPage*> subPageList;
+
+    vector<QPixmap*> bufferList;
 };
 
 #endif // TABCLASS_H
