@@ -10,13 +10,13 @@ class KeywordInput;
 class KeywordInput : public QDialog
 {
     Q_OBJECT
-signals:
-    void setEnd();
 
 // SLOT
 private slots:
     void on_BackBtn_clicked();
-
+    void on_bnAdd_clicked();
+signals:
+    void className(QString name);
 // 함수
 public:
     explicit KeywordInput(QWidget *parent = nullptr);
@@ -33,6 +33,7 @@ protected:
 
 private:
     Ui::KeywordInput *ui;
+    QString _className;
 };
 
 #endif // KEYWORDINPUT_H

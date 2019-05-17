@@ -17,9 +17,11 @@ public:
 
 signals:
     void setEnd();
+    void setName(QString name);
 
 public slots:
     void setEndSigByWidget();
+    void receiveName(QString name);
 
 public:
     Keyword* keyword;

@@ -88,7 +88,6 @@ void MainWindow::on_Lasso_clicked(){
     this->recentClickedTool = 0;
     this->tools->keyword->clicked();
 }
-
 void MainWindow::on_Brush_clicked(){
     this->recentClickedTool = 1;
     ui->ToolStack->addWidget(this->tools->brushW);

@@ -8,7 +8,7 @@
 #include <ToolBtn/toolbtn.h>
 #include <FileIO/fileclass.h>
 #include <vector>
-
+#include <map>
 using namespace std;
 
 namespace Ui {
@@ -23,7 +23,7 @@ signals:
 
 private slots:
     void addMainTab(QWidget* page, QString name);
-    void addBuff();
+    void addSubTab(QWidget* page, QString name);
     void on_MainTab_tabCloseRequested(int index);
     void on_FileOpen_clicked();
     void on_Lasso_clicked();
@@ -37,8 +37,11 @@ private slots:
     void on_LayerCreate_clicked();
     void on_LayerDel_clicked();
     void on_MainTab_currentChanged(int index);
+    void setSubPageName(QString name);
 
 // 함수
+    void on_SubTab_tabCloseRequested(int index);
+
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -64,15 +67,15 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-    int H = -1, W = -1;
-    QWidget* widget;
+
     int currentPage;
-    size_t totalPages;
+    int totalPages;
 
-    vector<QLabel*> layers;
-    vector<vector<QLabel*>> layerInfo;
+    // key : page number
+    // value : layer(label) instance and buffer info pair list
+    map<int, map<QLabel*, QPixmap*> >  layerInfo;
 
-    vector<vector<QPixmap*>> bufferList;
+    QString className;
 };
 
 #endif // MAINWINDOW_H

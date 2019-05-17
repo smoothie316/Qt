@@ -39,5 +39,12 @@ KeywordInput::~KeywordInput()
 
 void KeywordInput::on_BackBtn_clicked()
 {
-    emit setEnd();
+
+}
+
+void KeywordInput::on_bnAdd_clicked()
+{
+    this->_className = ui->lnEdit->text();
+    this->close();
+    emit className(this->_className);
 }

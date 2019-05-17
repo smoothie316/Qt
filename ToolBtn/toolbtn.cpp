@@ -19,9 +19,13 @@ ToolBtn::ToolBtn(QWidget *parent) : QWidget(parent)
     connect(paintW, SIGNAL(setEnd()),this, SLOT(setEndSigByWidget()));
     connect(eraseW, SIGNAL(setEnd()),this, SLOT(setEndSigByWidget()));
     connect(textW, SIGNAL(setEnd()),this, SLOT(setEndSigByWidget()));
-    connect(keyword, SIGNAL(setEnd()),this, SLOT(setEndSigByWidget()));
+    connect(keyword, SIGNAL(className(QString)), this, SLOT(receiveName(QString)));
 }
 
 void ToolBtn::setEndSigByWidget(){
     emit setEnd();
+}
+
+void ToolBtn::receiveName(QString name){
+    emit setName(name);
 }

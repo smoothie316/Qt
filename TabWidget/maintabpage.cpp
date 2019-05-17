@@ -57,6 +57,14 @@ void MainTabPage::mousePressEvent(QMouseEvent *event){
 
 }
 
-void MainTabPage::getLayerInfo(vector<QLabel*>& layerList){
+void MainTabPage::setLayerInfo(vector<QLabel*> layerList){
+    this->layerSet.assign(layerList.begin(), layerList.end());
+}
+
+void MainTabPage::getAllLayerInfo(vector<QLabel*>& layerList){
     layerList.assign(this->layerSet.begin(), this->layerSet.end());
+}
+
+void MainTabPage::getLayerInfo(QLabel*& layer, int index){
+    layer = this->layerSet.at(index);
 }

@@ -9,11 +9,11 @@ class Keyword : public QWidget
     Q_OBJECT
 
 signals:
-    void setEnd();
+    void className(QString name);
 
 // SLOT
 private slots:
-    void setEndByKeyInput();
+    void receiveInput(QString name);
 // 함수
 public:
     explicit Keyword(QWidget *parent = nullptr);

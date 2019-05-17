@@ -18,8 +18,7 @@ void TabClass::mainCreateImage(QStringList imageList){
         if(img->load(imageList[i])){
             *buffer = QPixmap::fromImage(*img);
             *buffer = buffer->scaled(img->width(), img->height(), Qt::KeepAspectRatio);
-            bufferList.push_back(buffer);
-            emit addBuff();
+            this->bufferList.push_back(buffer);
         }
         else{
             // 파일 열기 실패
@@ -30,4 +29,23 @@ void TabClass::mainCreateImage(QStringList imageList){
         mainPageList.push_back(mainPage);
         emit this->addMainTab(mainPage, imageList[i]);
     }
+}
+
+void TabClass::subTabCreate(QString name){
+    subPage = new SubTabPage();
+    subPage->setImage(name);
+    this->subPageList.push_back(subPage);
+    emit this->addSubTab(subPage, name);
+}
+
+void TabClass::getAllBuffList(vector<QPixmap *> &buffList){
+    buffList.assign(this->bufferList.begin(), this->bufferList.end());
+}
+
+void TabClass::getBuff(QPixmap*& buff, int index){
+    buff = this->bufferList.at(index);
+}
+
+void TabClass::setAllBuffList(vector<QPixmap *> buffList){
+    this->bufferList.assign(buffList.begin(), buffList.end());
 }
