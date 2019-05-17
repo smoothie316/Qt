@@ -38,7 +38,6 @@ public:
     vector<MainTabPage*> mainPageList;
     vector<SubTabPage*> subPageList;
 
-
 };
 
 #endif // TABCLASS_H
