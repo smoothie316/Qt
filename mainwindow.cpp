@@ -3,6 +3,7 @@
 
 #include <QDebug>
 
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
     this->tabs = new TabClass();
@@ -24,25 +25,36 @@ MainWindow::~MainWindow(){
     delete ui;
 }
 
+bool MainWindow::eventFilter(QObject* object, QEvent* event){
+    if(event->type() == QMouseEvent::MouseButtonPress){
+        //마우스 클릭 이벤트 발생시
+        qDebug() << object->objectName();
+        QStringList list = object->objectName().split(",");
+        //this->currentBuff = this->layerInfo.at(this->currentPage).at()
+        return true;
+    }
+    return QWidget::eventFilter(object, event);
+}
+
 // Tab page 관련 설정
 void MainWindow::addMainTab(QWidget* page, QString name){
     // main tab widget에 page를 추가하고 이미지 표시
     // 모든 데이터 초기화 담당
     this->totalPages++;
-    map<QLabel*, QPixmap*> tmpMap;
+    vector<QPixmap*> tmpVec;
     QWidget* widget = new QWidget();
     QGridLayout* grid = new QGridLayout();
     QLabel* tmpLayer = new QLabel(widget);
     QPixmap* tmpBuf = new QPixmap();
-
+    // 레이어QLabel 이벤트 처리
+    tmpLayer->installEventFilter(this);
     this->tabs->getBuff(tmpBuf, this->totalPages);
     tmpLayer->setPixmap(tmpBuf->scaled(ui->LayerWidget->width(), ui->LayerWidget->height(), Qt::KeepAspectRatio));
     tmpLayer->show();
-    tmpMap.insert(make_pair(tmpLayer, tmpBuf));
-    this->layerInfo.insert(make_pair(this->totalPages, tmpMap));
-    for(auto itr = tmpMap.begin(); itr != tmpMap.end(); ++itr){
-        grid->addWidget(itr->first);
-    }
+    tmpVec.push_back(tmpBuf);
+    this->layerInfo.insert(make_pair(this->totalPages, tmpVec));
+    tmpLayer->setObjectName(QString::number(this->totalPages)+ "," + QString::number(0));
+    grid->addWidget(tmpLayer);
     widget->setLayout(grid);
     ui->LayerWidget->addWidget(widget);
     ui->MainTab->addTab(page, name);

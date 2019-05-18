@@ -46,7 +46,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 protected:
-
+    bool eventFilter(QObject *object, QEvent* event);
 private:
     void changeToolPage();
 
@@ -63,6 +63,8 @@ public:
     TabClass* tabs;
     ToolBtn* tools;
     FileClass* fileIO;
+
+    QPixmap* currentBuff;
 protected:
 
 private:
@@ -73,7 +75,7 @@ private:
 
     // key : page number
     // value : layer(label) instance and buffer info pair list
-    map<int, map<QLabel*, QPixmap*> >  layerInfo;
+    map<int, vector<QPixmap*> >  layerInfo;
 
     QString className;
 };
