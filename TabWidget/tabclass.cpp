@@ -49,3 +49,9 @@ void TabClass::getBuff(QPixmap*& buff, int index){
 void TabClass::setAllBuffList(vector<QPixmap *> buffList){
     this->bufferList.assign(buffList.begin(), buffList.end());
 }
+
+void TabClass::resetPixmap(QPixmap* buf, int pageNum){
+    this->mainPage = this->mainPageList[pageNum];
+    this->mainPage->setLayerPixel(buf);
+
+}

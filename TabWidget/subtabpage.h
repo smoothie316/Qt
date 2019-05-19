@@ -5,6 +5,8 @@
 #include <QLabel>
 
 #include <vector>
+#include <iostream>
+
 
 using namespace std;
 
@@ -23,6 +25,8 @@ public:
 public:
     void setImage(QString name);
 private:
+    int countFileNum(QString dir);
+
 protected:
 
 
@@ -32,6 +36,7 @@ protected:
 private:
     Ui::SubTabPage *ui;
     vector<QLabel*> imgList;
+    vector<QString> fileName;
 };
 
 #endif // SUBTABPAGE_H

@@ -52,6 +52,7 @@ public:
 public:
     void setImage(QPixmap *bufferm, int w, int h);
     void setLayerInfo(vector<QLabel*> layerList);
+    void setLayerPixel(QPixmap* buf);
 
     void getAllLayerInfo(vector<QLabel*>& layerList);
     void getLayerInfo(QLabel*& layer, int index);

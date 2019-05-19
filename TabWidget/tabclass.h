@@ -28,6 +28,7 @@ signals:
 
 public slots:
     void mainCreateImage(QStringList imageList);
+    void resetPixmap(QPixmap* buf, int pageNum);
 
 private:
     MainTabPage* mainPage;

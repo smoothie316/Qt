@@ -44,6 +44,8 @@ void MainTabPage::resizeEvent(QResizeEvent *event){
     }
 }
 
+
+
 void MainTabPage::setMouseCursor(){
     if(this->clickedTool == 4){
 
@@ -67,4 +69,12 @@ void MainTabPage::getAllLayerInfo(vector<QLabel*>& layerList){
 
 void MainTabPage::getLayerInfo(QLabel*& layer, int index){
     layer = this->layerSet.at(index);
+}
+
+void MainTabPage::setLayerPixel(QPixmap* buf){
+    QLabel* label = this->layerSet.at(0);
+    int w = label->width();
+    int h = label->height();
+    label->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
+    label->show();
 }

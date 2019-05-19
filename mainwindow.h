@@ -20,6 +20,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 signals:
+    void resetPixmap(QPixmap* buf, int pageNum);
 
 private slots:
     void addMainTab(QWidget* page, QString name);
@@ -38,10 +39,11 @@ private slots:
     void on_LayerDel_clicked();
     void on_MainTab_currentChanged(int index);
     void setSubPageName(QString name);
-
-// 함수
     void on_SubTab_tabCloseRequested(int index);
+    void on_LayerUp_clicked();
+    void on_LayerDown_clicked();
 
+// 함수 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -49,6 +51,10 @@ protected:
     bool eventFilter(QObject *object, QEvent* event);
 private:
     void changeToolPage();
+    void resetAllLayerName();
+    void layerSwap(int a, int b);
+    void labelSwap(int a, int b);
+    QPixmap sumBuff();
 
 // 변수
 public:
@@ -73,9 +79,12 @@ private:
     int currentPage;
     int totalPages;
 
+    int currentBufNum;
+
     // key : page number
     // value : layer(label) instance and buffer info pair list
     map<int, vector<QPixmap*> >  layerInfo;
+    map<int, vector<QLabel*> > labelInfo;
 
     QString className;
 };
