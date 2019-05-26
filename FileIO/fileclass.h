@@ -20,7 +20,8 @@ public:
     void ImageOpen();
 public:
     QStringList keywordFileRead();
-
+public:
+    bool removeDir(const QString & dirName);
 private:
     QStringList keywordList;
 };
