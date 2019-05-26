@@ -33,8 +33,10 @@ void SubTabPage::setImage(QString name){
         if(img->load(dir)){
             *buf = QPixmap::fromImage(img->scaled(150,150, Qt::KeepAspectRatio));
             QLabel* layer = new QLabel();
+            layer->installEventFilter(this);
             layer->setMouseTracking(true);
             layer->setPixmap(*buf);
+            layer->setObjectName(QString::number(i));
             //layer->show();
             this->imgList.push_back(layer);
             grid->addWidget(layer, row, column++);
@@ -42,12 +44,30 @@ void SubTabPage::setImage(QString name){
                 column = 0;
                 row += 1;
             }
+            bufList.push_back(buf);
         }
         else {
         }
     }
     //ui->SubContentsArea->setLayout(grid);
 }
+
+bool SubTabPage::eventFilter(QObject *object, QEvent *event){
+    if(event->type()== QMouseEvent::MouseButtonPress){
+        clicked = true;
+    }
+    if(event->type() == QMouseEvent::MouseButtonRelease){
+        clicked = false;
+    }
+    return QWidget::eventFilter(object, event);
+}
+
+void SubTabPage::mouseMoveEvent(QMouseEvent *event){
+    if(clicked){
+        qDebug() << event->pos();
+    }
+}
+
 
 int SubTabPage::countFileNum(QString dir){
     int count = 0;
