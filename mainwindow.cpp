@@ -70,6 +70,12 @@ void MainWindow::addMainTab(QWidget* page, QString name){
     qDebug() << filename;
     this->bufImageNum++;
 
+    //bufImage 폴더에 임시 저장
+    QString filename ="bufImage/"+ QString::number(this->bufImageNum) + ".png";
+    tmpBuf->save(filename,"PNG");
+    qDebug() << filename;
+    this->bufImageNum++;
+
     grid->addWidget(tmpLayer);
     widget->setLayout(grid);
     vector<QLabel*> tmpLabelVec;
