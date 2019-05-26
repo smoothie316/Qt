@@ -71,6 +71,7 @@ public:
     FileClass* fileIO;
 
     QPixmap* currentBuff;
+    int bufImageNum;
 protected:
 
 private:

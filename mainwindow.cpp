@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+
 #include <QDebug>
 
 
@@ -21,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->currentPage = -1;
     this->totalPages = -1;
     this->currentBufNum = 0;
+    this->bufImageNum = 0;
 }
 
 MainWindow::~MainWindow(){
@@ -61,6 +63,12 @@ void MainWindow::addMainTab(QWidget* page, QString name){
     this->layerInfo.insert(make_pair(this->totalPages, tmpVec));
     tmpLayer->setObjectName(QString::number(this->totalPages)+ "," + QString::number(0));
     tmpLayer->setStyleSheet(style);
+
+    //bufImage 폴더에 임시 저장
+    QString filename ="bufImage/"+ QString::number(this->bufImageNum) + ".png";
+    tmpBuf->save(filename,"PNG");
+    qDebug() << filename;
+    this->bufImageNum++;
 
     grid->addWidget(tmpLayer);
     widget->setLayout(grid);
