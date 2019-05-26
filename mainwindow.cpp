@@ -23,10 +23,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->currentPage = -1;
     this->totalPages = -1;
     this->currentBufNum = 0;
-    this->bufImageNum = 0;
+    //bufImage 폴더 생성
+    QString logPath = "bufImage";
+    QDir dir;
+    dir.mkpath(logPath);
 }
 
 MainWindow::~MainWindow(){
+    FileClass().removeDir("bufImage");
+    //bufImage 폴더 삭제
     delete ui;
 }
 
@@ -66,10 +71,11 @@ void MainWindow::addMainTab(QWidget* page, QString name){
     tmpLayer->setStyleSheet(style);
 
     //bufImage 폴더에 임시 저장
-    QString filename ="bufImage/"+ QString::number(this->bufImageNum) + ".png";
+    QStringList nameList = name.split("/");
+    int listCount = name.split("/").length()-1;
+    QString filename ="bufImage/"+ nameList[listCount];
     tmpBuf->save(filename,"PNG");
     qDebug() << filename;
-    this->bufImageNum++;
 
     grid->addWidget(tmpLayer);
     widget->setLayout(grid);
@@ -84,6 +90,15 @@ void MainWindow::on_MainTab_tabCloseRequested(int index){
     // main tab widget에 page를 삭제할 때 사용되는 함수
     // 이미지 파일 저장 관련 수행 필요
     this->totalPages--;
+
+    //종료된 탭의 파일 삭제
+    QString name = ui->MainTab->tabText(index);
+    qDebug() << name;
+    QStringList nameList = name.split("/");
+    int listCount = name.split("/").length()-1;
+    QString filename ="bufImage/"+ nameList[listCount];
+    QFile::remove(filename);
+
     ui->MainTab->removeTab(index);
     ui->LayerWidget->removeWidget(ui->LayerWidget->currentWidget());
 }
