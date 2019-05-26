@@ -11,9 +11,13 @@ MainTabPage::MainTabPage(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->MainEdit->setWidgetResizable(true);
+
     this->buf= nullptr;
     this->clickedTool = 1;
     this->setMouseCursor();
+    this->w = 0;
+    this->h = 0;
 }
 
 MainTabPage::~MainTabPage()
@@ -23,16 +27,25 @@ MainTabPage::~MainTabPage()
 
 void MainTabPage::setImage(QPixmap* buffer, int w, int h){
     buf = buffer;
-    QLabel* layer = new QLabel(this->ui->MainEditContents);
+    QWidget* widget = new QWidget();
+    QLayout *vBox = new QVBoxLayout();
+    widget->setLayout(vBox);
+    QLabel* layer = new QLabel();
+    this->w = w;
+    this->h = h;
+    layer->installEventFilter(this);
     layer->setMouseTracking(true);
     layer->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
-    layer->show();
+    vBox->addWidget(layer);
+    ui->MainEdit->setWidget(widget);
     this->layerSet.push_back(layer);
 }
 
 void MainTabPage::resizeEvent(QResizeEvent *event){
     int w = event->size().width();
     int h = event->size().height();
+    this->w = w;
+    this->h = h;
     // 해상도 저하
     if(!layerSet.empty()){
         for(size_t i=0; i<layerSet.size(); i++){
@@ -44,19 +57,51 @@ void MainTabPage::resizeEvent(QResizeEvent *event){
     }
 }
 
-
-
 void MainTabPage::setMouseCursor(){
+    // mouse cursor 주변 모양
     if(this->clickedTool == 4){
 
     }
 }
-
-void MainTabPage::mouseMoveEvent(QMouseEvent *event){
-
+void MainTabPage::keyPressEvent(QKeyEvent *event){
+    if(event->modifiers() == Qt::CTRL)
+        ctrlKey = true;
 }
-void MainTabPage::mousePressEvent(QMouseEvent *event){
+void MainTabPage::keyReleaseEvent(QKeyEvent *event){
+    if(event->key() == Qt::Key_Control){
+        ctrlKey = false;
+    }
+}
+void MainTabPage::wheelEvent(QWheelEvent *event){
+    if(ctrlKey){
+        const double degree = event->delta() / 12.0;
+        int w = this->w * (degree/100);
+        int h = this->h * (degree/100);
+        w += this->w;
+        h += this->h;
+        this->w = w;
+        this->h = h;
+        for(int i=0; i<this->layerSet.size(); i++){
+            //this->layerSet[i]->setGeometry(0,0,w,h);
+            this->layerSet[i]->clear();
+            this->layerSet[i]->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
 
+        }
+        ui->MainEditContents->update();
+    }
+}
+
+void adjustScrollBar(QScrollBar* scrollBar, int factor){
+    scrollBar->setValue(factor * scrollBar->value());
+}
+
+void MainTabPage::eventFilter(QEvent *event){
+    if(event->type() == QMouseEvent::MouseButtonPress){
+
+    }
+    if(event->type() == QMouseEvent::MouseMove){
+
+    }
 }
 
 void MainTabPage::setLayerInfo(vector<QLabel*> layerList){

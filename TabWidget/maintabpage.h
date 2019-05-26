@@ -6,6 +6,9 @@
 #include <vector>
 #include <QLabel>
 #include <QMouseEvent>
+#include <QKeyEvent>
+#include <QWheelEvent>
+#include <QScrollBar>
 
 #include <ToolBtn/toolbtn.h>
 #include <colorselect.h>
@@ -26,9 +29,16 @@ public:
 protected:
     void resizeEvent(QResizeEvent* event) override;
     //virtual void   mouseDoubleClickEvent ( QMouseEvent * event );
-    virtual void   mouseMoveEvent ( QMouseEvent * event ) override;
-    virtual void   mousePressEvent ( QMouseEvent * event ) override;
+//    virtual void   mouseMoveEvent ( QMouseEvent * event ) override;
+//    virtual void   mousePressEvent ( QMouseEvent * event ) override;
     //virtual void   mouseReleaseEvent ( QMouseEvent * event );
+    void keyPressEvent(QKeyEvent* event);
+    void keyReleaseEvent(QKeyEvent* event);
+    void wheelEvent(QWheelEvent *event);
+    void eventFilter(QEvent *event);
+
+private:
+    void adjustScrollBar(QScrollBar* scrollBar, int factor);
 private slots:
 
 private:
@@ -37,6 +47,10 @@ private:
     QPixmap* cursorPix;
     vector<QLabel*> layerSet;
     ToolBtn* tools;
+    bool ctrlKey =false;
+
+    int w, h;
+    int originW, originH;
 
 public:
     /*
