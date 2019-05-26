@@ -24,13 +24,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->totalPages = -1;
     this->currentBufNum = 0;
     //bufImage 폴더 생성
-    QString logPath = "bufImage";
+    QString logPath = "debug/bufImage";
     QDir dir;
     dir.mkpath(logPath);
 }
 
 MainWindow::~MainWindow(){
-    FileClass().removeDir("bufImage");
+    QString filePath = QApplication::applicationDirPath();
+    //FileClass().removeDir("debug/bufImage");
+    FileClass().removeAllDir();
     //bufImage 폴더 삭제
     delete ui;
 }
@@ -73,7 +75,7 @@ void MainWindow::addMainTab(QWidget* page, QString name){
     //bufImage 폴더에 임시 저장
     QStringList nameList = name.split("/");
     int listCount = name.split("/").length()-1;
-    QString filename ="bufImage/"+ nameList[listCount];
+    QString filename ="debug/bufImage/"+ nameList[listCount];
     tmpBuf->save(filename,"PNG");
     qDebug() << filename;
 
@@ -96,7 +98,7 @@ void MainWindow::on_MainTab_tabCloseRequested(int index){
     qDebug() << name;
     QStringList nameList = name.split("/");
     int listCount = name.split("/").length()-1;
-    QString filename ="bufImage/"+ nameList[listCount];
+    QString filename ="debug/bufImage/"+ nameList[listCount];
     QFile::remove(filename);
 
     ui->MainTab->removeTab(index);

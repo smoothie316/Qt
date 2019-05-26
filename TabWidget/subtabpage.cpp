@@ -38,7 +38,7 @@ void SubTabPage::setImage(QString name){
             //layer->show();
             this->imgList.push_back(layer);
             grid->addWidget(layer, row, column++);
-            if(column == 4){
+            if(column == 3){
                 column = 0;
                 row += 1;
             }
