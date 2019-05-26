@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <iostream>
+#include <QMouseEvent>
 
 
 using namespace std;
@@ -28,7 +29,8 @@ private:
     int countFileNum(QString dir);
 
 protected:
-
+    bool eventFilter(QObject* object, QEvent* event);
+    void mouseMoveEvent(QMouseEvent *event);
 
 // 변수
 public:
@@ -36,7 +38,10 @@ protected:
 private:
     Ui::SubTabPage *ui;
     vector<QLabel*> imgList;
+    vector<QPixmap*> bufList;
     vector<QString> fileName;
+    bool clicked = false;
+
 };
 
 #endif // SUBTABPAGE_H

@@ -87,21 +87,11 @@ void MainTabPage::wheelEvent(QWheelEvent *event){
             this->layerSet[i]->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
 
         }
-        ui->MainEditContents->update();
     }
 }
 
 void adjustScrollBar(QScrollBar* scrollBar, int factor){
     scrollBar->setValue(factor * scrollBar->value());
-}
-
-void MainTabPage::eventFilter(QEvent *event){
-    if(event->type() == QMouseEvent::MouseButtonPress){
-
-    }
-    if(event->type() == QMouseEvent::MouseMove){
-
-    }
 }
 
 void MainTabPage::setLayerInfo(vector<QLabel*> layerList){
