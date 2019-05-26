@@ -43,6 +43,9 @@ bool MainWindow::eventFilter(QObject* object, QEvent* event){
 void MainWindow::addMainTab(QWidget* page, QString name){
     // main tab widget에 page를 추가하고 이미지 표시
     // 모든 데이터 초기화 담당
+
+    QString style = "border-color:rgb(0,0,0); border-width:1.2px; border-style:solid;";
+
     this->totalPages++;
     vector<QPixmap*> tmpVec;
     QWidget* widget = new QWidget();
@@ -57,6 +60,7 @@ void MainWindow::addMainTab(QWidget* page, QString name){
     tmpVec.push_back(tmpBuf);
     this->layerInfo.insert(make_pair(this->totalPages, tmpVec));
     tmpLayer->setObjectName(QString::number(this->totalPages)+ "," + QString::number(0));
+    tmpLayer->setStyleSheet(style);
 
     grid->addWidget(tmpLayer);
     widget->setLayout(grid);
@@ -77,6 +81,10 @@ void MainWindow::on_MainTab_tabCloseRequested(int index){
 
 void MainWindow::on_LayerCreate_clicked(){
     // 레이어 추가 (create 버튼)
+
+    // 테두리 추가
+    QString style = "border-color:rgb(0,0,0); border-width:1.2px; border-style:solid;";
+
     QPixmap *origin = this->layerInfo.at(this->currentPage).at(0);
     QPixmap* tmpPix = new QPixmap(origin->width(), origin->height());
     tmpPix->fill(Qt::white);
@@ -84,11 +92,12 @@ void MainWindow::on_LayerCreate_clicked(){
     qDebug() << this->currentBufNum;
     QWidget* widget = this->ui->LayerWidget->currentWidget();
     QLabel* tmpLayer = new QLabel(widget);
-    tmpLayer->setPixmap(*tmpPix);
+    tmpLayer->setPixmap(tmpPix->scaled(this->width(), this->height(), Qt::KeepAspectRatio));
     tmpLayer->setObjectName(QString::number(this->currentPage)+ "," + QString::number(this->currentBufNum));
     this->layerInfo.at(this->currentPage).push_back(tmpPix);
     this->labelInfo.at(this->currentPage).push_back(tmpLayer);
     tmpLayer->installEventFilter(this);
+    tmpLayer->setStyleSheet(style);
 
     widget->layout()->addWidget(tmpLayer);
     // MainPage QLabel 새로그리는 Event 발생
@@ -170,16 +179,18 @@ QPixmap MainWindow::sumBuff(){
 
 void MainWindow::layerSwap(int a, int b){
     vector<QPixmap*> tmpLayer = this->layerInfo.at(this->currentPage);
-    QPixmap* tmpPix = tmpLayer.at(a);
-    tmpLayer.at(a) = tmpLayer.at(b);
-    tmpLayer.at(b) = tmpPix;
+    QPixmap* tmpPix = this->layerInfo.at(this->currentPage).at(a);
+    this->layerInfo.at(this->currentPage).at(a) = this->layerInfo.at(this->currentPage).at(b);
+    this->layerInfo.at(this->currentPage).at(b) = tmpPix;
 }
 
 void MainWindow::labelSwap(int a, int b){
     vector<QLabel*> tmpLabel = this->labelInfo.at(this->currentPage);
     vector<QPixmap*> tmpPix = this->layerInfo.at(this->currentPage);
-    tmpLabel.at(a)->setPixmap(*tmpPix.at(b));
-    tmpLabel.at(b)->setPixmap(*tmpPix.at(a));
+    this->labelInfo.at(this->currentPage).at(a)->setPixmap(tmpPix.at(a)->scaled(tmpLabel.at(a)->width(), tmpLabel.at(a)->height(), Qt::KeepAspectRatio));
+    this->labelInfo.at(this->currentPage).at(b)->setPixmap(tmpPix.at(b)->scaled(tmpLabel.at(b)->width(), tmpLabel.at(b)->height(), Qt::KeepAspectRatio));
+    this->labelInfo.at(this->currentPage).at(a)->show();
+    this->labelInfo.at(this->currentPage).at(b)->show();
 }
 
 void MainWindow::resetAllLayerName(){
