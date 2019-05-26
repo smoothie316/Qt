@@ -3,6 +3,7 @@
 
 
 #include <QDebug>
+#include <QPainter>
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
@@ -95,7 +96,15 @@ void MainWindow::on_LayerCreate_clicked(){
 
     QPixmap *origin = this->layerInfo.at(this->currentPage).at(0);
     QPixmap* tmpPix = new QPixmap(origin->width(), origin->height());
-    tmpPix->fill(Qt::white);
+    tmpPix->fill(Qt::transparent);
+//    QImage image(tmpPix->size(), QImage::Format_ARGB32_Premultiplied);
+
+//    image.fill(Qt::transparent);
+//    QPainter p(&image);
+//    p.setOpacity(0.0);
+//    p.drawPixmap(0,0,*tmpPix);
+//    p.end();
+
     this->currentBufNum++;
     qDebug() << this->currentBufNum;
     QWidget* widget = this->ui->LayerWidget->currentWidget();
@@ -110,18 +119,9 @@ void MainWindow::on_LayerCreate_clicked(){
     widget->layout()->addWidget(tmpLayer);
     // MainPage QLabel 새로그리는 Event 발생
 
-    QPixmap buff;
-    QImage* finalImage = new QImage(origin->width(), origin->height(), QImage::Format_RGB32);
-    for(auto itr = this->layerInfo.at(this->currentPage).begin(); itr != this->layerInfo.at(this->currentPage).end(); itr++ ){
-        QImage tmp = (*itr)->toImage();
-        for(int i = 0; i<origin->width(); i++){
-            for(int j=0; j<origin->height(); j++){
-                finalImage->setPixel(i,j, tmp.pixel(i,j));
-            }
-        }
-    }
-    buff = QPixmap::fromImage(*finalImage);
-    //emit resetPixmap(&buff, this->currentPage);
+
+    QPixmap buff = sumBuff();
+    emit resetPixmap(&buff, this->currentPage);
 }
 
 void MainWindow::on_LayerDel_clicked(){
@@ -138,7 +138,7 @@ void MainWindow::on_LayerDel_clicked(){
 
 
     QPixmap buff = sumBuff();
-    //emit resetPixmap(&buff, this->currentPage);
+    emit resetPixmap(&buff, this->currentPage);
 }
 
 void MainWindow::on_LayerUp_clicked()
@@ -152,7 +152,7 @@ void MainWindow::on_LayerUp_clicked()
     this->currentBufNum--;
 
     QPixmap buff = sumBuff();
-    //emit resetPixmap(&buff, this->currentPage);
+    emit resetPixmap(&buff, this->currentPage);
 }
 
 void MainWindow::on_LayerDown_clicked()
@@ -166,15 +166,16 @@ void MainWindow::on_LayerDown_clicked()
     this->currentBufNum++;
 
     QPixmap buff = sumBuff();
-    //emit resetPixmap(&buff, this->currentPage);
+    emit resetPixmap(&buff, this->currentPage);
 }
 
 QPixmap MainWindow::sumBuff(){
     QPixmap buff;
     QPixmap *origin = this->layerInfo.at(this->currentPage).at(0);
-    QImage* finalImage = new QImage(origin->width(), origin->height(), QImage::Format_RGB32);
-    for(auto itr = this->layerInfo.at(this->currentPage).end()-1; itr != this->layerInfo.at(this->currentPage).begin(); --itr ){
-        QImage tmp = (*itr)->toImage();
+    QImage* finalImage = new QImage(origin->width(), origin->height(), QImage::Format_ARGB32);
+    qDebug() << this->layerInfo.at(this->currentPage).size();
+    for(int k = this->layerInfo.at(this->currentPage).size()-1; k >= 0  ; k-- ){
+        QImage tmp = this->layerInfo.at(this->currentPage).at(k)->toImage();
         for(int i = 0; i<origin->width(); i++){
             for(int j=0; j<origin->height(); j++){
                 finalImage->setPixel(i,j, tmp.pixel(i,j));
