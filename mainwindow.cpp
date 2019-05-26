@@ -96,14 +96,9 @@ void MainWindow::on_LayerCreate_clicked(){
 
     QPixmap *origin = this->layerInfo.at(this->currentPage).at(0);
     QPixmap* tmpPix = new QPixmap(origin->width(), origin->height());
-    tmpPix->fill(Qt::transparent);
-//    QImage image(tmpPix->size(), QImage::Format_ARGB32_Premultiplied);
-
-//    image.fill(Qt::transparent);
-//    QPainter p(&image);
-//    p.setOpacity(0.0);
-//    p.drawPixmap(0,0,*tmpPix);
-//    p.end();
+    QImage* tmpImg = new QImage(origin->width(), origin->height(), QImage::Format_ARGB32_Premultiplied);
+    tmpImg->fill(Qt::transparent);
+    *tmpPix = QPixmap::fromImage(*tmpImg);
 
     this->currentBufNum++;
     qDebug() << this->currentBufNum;
@@ -172,12 +167,13 @@ void MainWindow::on_LayerDown_clicked()
 QPixmap MainWindow::sumBuff(){
     QPixmap buff;
     QPixmap *origin = this->layerInfo.at(this->currentPage).at(0);
-    QImage* finalImage = new QImage(origin->width(), origin->height(), QImage::Format_ARGB32);
-    qDebug() << this->layerInfo.at(this->currentPage).size();
+    QImage* finalImage = new QImage(origin->width(), origin->height(), QImage::Format_ARGB32_Premultiplied);
     for(int k = this->layerInfo.at(this->currentPage).size()-1; k >= 0  ; k-- ){
         QImage tmp = this->layerInfo.at(this->currentPage).at(k)->toImage();
         for(int i = 0; i<origin->width(); i++){
             for(int j=0; j<origin->height(); j++){
+                if(tmp.pixelColor(i,j) == Qt::transparent)
+                    continue;
                 finalImage->setPixel(i,j, tmp.pixel(i,j));
             }
         }

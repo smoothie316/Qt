@@ -16,8 +16,10 @@ void TabClass::mainCreateImage(QStringList imageList){
         QPixmap *buffer = new QPixmap();
 
         if(img->load(imageList[i])){
-            *buffer = QPixmap::fromImage(*img);
-            *buffer = buffer->scaled(img->width(), img->height(), Qt::KeepAspectRatio);
+            QImage tmpImg =img->convertToFormat(QImage::Format_ARGB32_Premultiplied);
+            qDebug() << tmpImg.alphaChannel();
+            *buffer = QPixmap::fromImage(tmpImg);
+            *buffer = buffer->scaled(tmpImg.width(), tmpImg.height(), Qt::KeepAspectRatio);
             this->bufferList.push_back(buffer);
         }
         else{
