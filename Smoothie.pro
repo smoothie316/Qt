@@ -39,6 +39,14 @@ SOURCES += \
         ToolBtn/seterasewidget.cpp \
         ToolBtn/setbrushwidget.cpp \
         colorselect.cpp \
+    Paint/command.cpp \
+    Paint/document.cpp \
+    Paint/ellipse.cpp \
+    Paint/fill.cpp \
+    Paint/floodfill.cpp \
+    Paint/rectangle.cpp \
+    Paint/scribble.cpp \
+    Paint/shape.cpp
 
 
 
@@ -56,6 +64,10 @@ HEADERS += \
         ToolBtn/seterasewidget.h \
         ToolBtn/setbrushwidget.h \
         colorselect.h \
+    Paint/command.h \
+    Paint/document.h \
+    Paint/floodfill.h \
+    Paint/shape.h
 
 FORMS += \
         mainwindow.ui \
