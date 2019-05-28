@@ -54,6 +54,8 @@ private:
     void resetAllLayerName();
     void layerSwap(int a, int b);
     void labelSwap(int a, int b);
+    void resetLabel(int index);
+    void resetLayer(int index);
     QPixmap sumBuff();
 
 // 변수

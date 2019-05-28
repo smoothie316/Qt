@@ -102,7 +102,29 @@ void MainWindow::on_MainTab_tabCloseRequested(int index){
     QFile::remove(filename);
 
     ui->MainTab->removeTab(index);
+    this->resetLabel(index);
+    this->resetLayer(index);
     ui->LayerWidget->removeWidget(ui->LayerWidget->currentWidget());
+}
+
+void MainWindow::resetLabel(int index){
+    map<int, vector<QLabel*> > tmpLabelInfo;
+    tmpLabelInfo.swap(this->labelInfo);
+    tmpLabelInfo.erase(tmpLabelInfo.find(index));
+    int i = 0;
+    for(auto itr = tmpLabelInfo.begin(); itr != tmpLabelInfo.end(); ++itr){
+        this->labelInfo.insert(make_pair(i++, itr->second));
+    }
+}
+
+void MainWindow::resetLayer(int index){
+    map<int, vector<QPixmap*> > tmpLayerInfo;
+    tmpLayerInfo.swap(this->layerInfo);
+    tmpLayerInfo.erase(tmpLayerInfo.find(index));
+    int i=0;
+    for(auto itr = tmpLayerInfo.begin(); itr != tmpLayerInfo.end(); ++itr){
+        this->layerInfo.insert(make_pair(i++, itr->second));
+    }
 }
 
 void MainWindow::on_LayerCreate_clicked(){
