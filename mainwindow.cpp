@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QString logPath = "debug/bufImage";
     QDir dir;
     dir.mkpath(logPath);
+    setAcceptDrops(true);
 }
 
 MainWindow::~MainWindow(){
@@ -172,14 +173,10 @@ void MainWindow::on_LayerCreate_clicked(){
     emit resetPixmap(&buff, this->currentPage);
 }
 
-void MainWindow::addTextLayer(QPixmap* pix, QLabel* label){
-    this->currentBufNum =0;
-    this->layerInfo.at(this->currentPage).insert(this->layerInfo.at(this->currentPage).begin(), pix);
-    this->labelInfo.at(this->currentPage).insert(this->labelInfo.at(this->currentPage).begin(), label);
-    QPixmap buff = sumBuff();
-    emit resetPixmap(&buff, this->currentPage);
-}
 
+void MainWindow::addTextLayer(QPixmap* pix, QLabel* label){
+
+}
 void MainWindow::on_LayerDel_clicked(){
     // 레이어 삭제 (delete 버튼)
     QWidget* widget = this->labelInfo.at(this->currentPage).at(this->currentBufNum);

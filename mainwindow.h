@@ -10,7 +10,8 @@
 #include <vector>
 #include <map>
 using namespace std;
-
+class QDragEnterEvent;
+class QDropEvent;
 namespace Ui {
 class MainWindow;
 }
@@ -42,6 +43,10 @@ private slots:
     void on_SubTab_tabCloseRequested(int index);
     void on_LayerUp_clicked();
     void on_LayerDown_clicked();
+    //void dragEnterEvent(QDragEnterEvent *event) override;
+    //void dragMoveEvent(QDragMoveEvent *event) override;
+    //void dropEvent(QDropEvent *event) override;
+    //void mousePressEvent(QMouseEvent *event) override;
 
 public slots:
     void drawEnd();

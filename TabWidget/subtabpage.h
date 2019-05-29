@@ -10,7 +10,8 @@
 
 
 using namespace std;
-
+class QDragEnterEvent;
+class QDropEvent;
 namespace Ui {
 class SubTabPage;
 }
@@ -31,6 +32,9 @@ private:
 protected:
     bool eventFilter(QObject* object, QEvent* event);
     void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent * event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
 
 // 변수
 public:

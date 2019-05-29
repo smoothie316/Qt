@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPixmap>
 #include <vector>
+#include <map>
 #include <QLabel>
 #include <QMouseEvent>
 #include <QKeyEvent>
@@ -12,13 +13,14 @@
 #include <QScrollBar>
 #include <QPainter>
 #include <QPen>
+#include <QtWidgets>
 
 #include <ToolBtn/toolbtn.h>
 #include <colorselect.h>
 
 
 using namespace std;
-
+class QDropEvent;
 namespace Ui {
 class MainTabPage;
 }
@@ -43,7 +45,10 @@ protected:
     virtual void keyPressEvent(QKeyEvent* event) override;
     virtual void keyReleaseEvent(QKeyEvent* event) override;
     virtual void wheelEvent(QWheelEvent *event) override;
-    //void paintEvent(QPaintEvent* event) override;
+    virtual void dropEvent(QDropEvent *event) override;
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+
 
 private:
     void adjustScrollBar(QScrollBar* scrollBar, int factor);
@@ -57,6 +62,7 @@ private:
     QPixmap* cursorPix;
     vector<QLabel*> layerSet;
     vector<QLabel*> textSet;
+    vector<QString> inputtedTextList;
     bool ctrlKey =false;
 
     int w, h;
@@ -73,7 +79,7 @@ private:
     int activeText =-1;
     bool textInput = false;
     bool textInputStart = false;
-    QString textInputted;
+    bool dbClicked = false;
     QPixmap* textPix;
 public:
     /*

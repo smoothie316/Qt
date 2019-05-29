@@ -47,6 +47,7 @@ void KeywordInput::on_bnAdd_clicked()
 {   
     //QString filePath = QApplication::applicationDirPath();
     this->_className = ui->lnEdit->text();
+    this->close();
 
     //inputName의폴더 생성
     QString logPath = _className;
@@ -76,14 +77,16 @@ void KeywordInput::on_bnAdd_clicked()
 
         qDebug() << _arguments;
         qDebug() << _exePath;
-    // 실행한다.
-        processEXE->startDetached(_exePath, _arguments);
+    // 실행한다..
+        qDebug() << processEXE->state();
+        processEXE->start(_exePath, _arguments);
+
     // 아규먼트가 불필요 하다면 ...
     // processEXE->start(_exePath);
     }
-    this->close();
 
-    processEXE->waitForFinished(-1);
+
+    qDebug() << processEXE->state();
     qDebug() << "DONE";
     emit className(this->_className);
 

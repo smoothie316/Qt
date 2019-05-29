@@ -1,6 +1,5 @@
 #include "maintabpage.h"
 #include "ui_maintabpage.h"
-
 #include <QLabel>
 #include <QResizeEvent>
 #include <QDebug>
@@ -21,6 +20,8 @@ MainTabPage::MainTabPage(QWidget *parent) :
     this->h = 0;
     originPos = QPoint(0,0);
     prevPos = QPoint(0,0);
+
+    setAcceptDrops(true);
 }
 
 MainTabPage::~MainTabPage()
@@ -89,12 +90,14 @@ bool MainTabPage::eventFilter(QObject* object, QEvent *event){\
             }
             if(event->type() == QMouseEvent::MouseButtonDblClick){
                 // layer 저장
-                QString style= "";
+                dbClicked = true;
+                QString style= " ";
                 QLabel* tmpLabel = this->textSet.at(this->activeText);
                 tmpLabel->setStyleSheet(style);
                 this->textInputStart = false;
                 this->textInput = false;
-                emit addTextLayer(this->textPix, tmpLabel);
+                this->originPos = QPoint(0,0);
+                this->prevPos = QPoint(0,0);
             }
         }
     }
@@ -106,15 +109,17 @@ void MainTabPage::keyPressEvent(QKeyEvent *event){
         ctrlKey = true;
     if(textInputStart){
         QLabel* tmpLabel = this->textSet.at(this->activeText);
+        QString textInputted = this->inputtedTextList.at(this->activeText);
         if(event->key() == Qt::Key_Backspace){
-            this->textInputted = this->textInputted.mid(0, this->textInputted.length()-1);
+            textInputted = textInputted.mid(0, textInputted.length()-1);
         }
         else if(event->key() == Qt::Key_Enter){
-            this->textInputted += "\n";
+            textInputted += "\n";
         }
         else{
-           this->textInputted += event->text();
+           textInputted += event->text();
         }
+        this->inputtedTextList.at(this->activeText) = textInputted;
         this->textPix = new QPixmap(tmpLabel->width(), tmpLabel->height());
         this->textPix->fill(Qt::transparent);
         QPainter painter(this->textPix);
@@ -127,7 +132,7 @@ void MainTabPage::keyPressEvent(QKeyEvent *event){
         painter.setFont(this->tools->textW->textFont);
 
         QRect rect(0,0, tmpLabel->width(), tmpLabel->height());
-        painter.drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, this->textInputted);
+        painter.drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, textInputted);
         painter.end();
 
         tmpLabel->setPixmap(*(this->textPix));
@@ -158,15 +163,15 @@ void MainTabPage::wheelEvent(QWheelEvent *event){
 
 void MainTabPage::mousePressEvent(QMouseEvent *event){
     this->prevPos = QPoint(0,0);
-     QSize widgetSize = this->layerSet.at(0)->size();
+    QSize widgetSize = this->layerSet.at(0)->size();
     if(event->button() == Qt::LeftButton){
         if(this->layerInfo->at(this->currentBufNum)->width() > this->layerInfo->at(this->currentBufNum)->height()){
-            double ratio = bufSize.height() / (double)widgetSize.height();
+            //double ratio = bufSize.height() / (double)widgetSize.height();
             originPos.setY((int)(event->y() - ((widgetSize.height()-bufSize.height())/2)));
             originPos.setX(event->x());
         }
         else {
-            double ratio = bufSize.width() / (double)widgetSize.width();
+            //double ratio = bufSize.width() / (double)widgetSize.width();
             originPos.setX((int)(event->x() - ((widgetSize.width()-bufSize.width())/2)));
             originPos.setY(event->y());
         }
@@ -182,13 +187,13 @@ void MainTabPage::mouseMoveEvent(QMouseEvent *event){
     QSize widgetSize = this->layerSet.at(0)->size();
     if((event->buttons() & Qt::LeftButton)){
         if(this->layerInfo->at(this->currentBufNum)->width() > this->layerInfo->at(this->currentBufNum)->height()){
-            double ratio = bufSize.height() / (double)widgetSize.height();
+            //double ratio = bufSize.height() / (double)widgetSize.height();
             prevPos = originPos;
             originPos.setY((int)(event->y() - ((widgetSize.height()-bufSize.height())/2)));
             originPos.setX(event->x());
         }
         else {
-            double ratio = bufSize.width() / (double)widgetSize.width();
+            //double ratio = bufSize.width() / (double)widgetSize.width();
             originPos.setX((int)(event->x() - ((widgetSize.width()-bufSize.width())/2)));
             originPos.setY(event->y());
         }
@@ -211,7 +216,6 @@ void MainTabPage::mouseMoveEvent(QMouseEvent *event){
             this->draw(painter, 255, 255, 255, this->tools->eraseW->eraserSize);
         }
         if(this->clickedTool == 3 && !textInput){
-            // text
             this->textEnd = event->pos();
         }
     }
@@ -222,7 +226,10 @@ void MainTabPage::mouseReleaseEvent(QMouseEvent *event){
     clicked = false;
     if(this->clickedTool == 1 || this->clickedTool == 4)
         emit drawEnd();
-    if(this->clickedTool == 3){
+    if(this->clickedTool == 3 && !dbClicked){
+        this->originPos = QPoint(0,0);
+        this->prevPos = QPoint(0,0);
+
         QString style = "border-color:rgb(0,0,0); border-width:1.2px; border-style:solid;";
         QString style2 = "";
         QLabel* text = new QLabel(this);
@@ -239,8 +246,11 @@ void MainTabPage::mouseReleaseEvent(QMouseEvent *event){
         this->activeText = this->textSet.size();
         text->setObjectName("text_"+QString::number(this->activeText));
         this->textSet.push_back(text);
+        this->inputtedTextList.push_back("");
         this->textInput = true;
     }
+    else if(dbClicked)
+        dbClicked = false;
 }
 
 //void MainTabPage::setTextColor(QLabel* text){
@@ -330,3 +340,61 @@ void MainTabPage::setLayerPixel(QPixmap* buf){
     label->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
     update();
 }
+
+void MainTabPage::dropEvent(QDropEvent *event)
+{
+    if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
+        QByteArray itemData = event->mimeData()->data("application/x-dnditemdata");
+        QDataStream dataStream(&itemData, QIODevice::ReadOnly);
+
+        QPixmap pixmap;
+        QPoint offset;
+        dataStream >> pixmap >> offset;
+        pixmap.save("debug/test.png","PNG");
+
+
+        /*QLabel *newIcon = new QLabel(this);
+        newIcon->setPixmap(pixmap);
+        newIcon->move(event->pos() - offset);
+        newIcon->show();
+        newIcon->setAttribute(Qt::WA_DeleteOnClose);*/
+
+        if (event->source() == this) {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        } else {
+            event->acceptProposedAction();
+        }
+    } else {
+        event->ignore();
+    }
+}
+
+void MainTabPage::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
+        if (event->source() == this) {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        } else {
+            event->acceptProposedAction();
+        }
+    } else {
+        event->ignore();
+    }
+}
+
+void MainTabPage::dragMoveEvent(QDragMoveEvent *event)
+{
+    if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
+        if (event->source() == this) {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        } else {
+            event->acceptProposedAction();
+        }
+    } else {
+        event->ignore();
+    }
+}
+
