@@ -1,6 +1,5 @@
 #include "maintabpage.h"
 #include "ui_maintabpage.h"
-
 #include <QLabel>
 #include <QResizeEvent>
 #include <QDebug>
@@ -20,6 +19,8 @@ MainTabPage::MainTabPage(QWidget *parent) :
     this->h = 0;
     originPos = QPoint(0,0);
     prevPos = QPoint(0,0);
+
+    setAcceptDrops(true);
 }
 
 MainTabPage::~MainTabPage()
@@ -242,3 +243,61 @@ void MainTabPage::setLayerPixel(QPixmap* buf){
     label->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
     update();
 }
+
+void MainTabPage::dropEvent(QDropEvent *event)
+{
+    if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
+        QByteArray itemData = event->mimeData()->data("application/x-dnditemdata");
+        QDataStream dataStream(&itemData, QIODevice::ReadOnly);
+
+        QPixmap pixmap;
+        QPoint offset;
+        dataStream >> pixmap >> offset;
+        pixmap.save("debug/test.png","PNG");
+
+
+        /*QLabel *newIcon = new QLabel(this);
+        newIcon->setPixmap(pixmap);
+        newIcon->move(event->pos() - offset);
+        newIcon->show();
+        newIcon->setAttribute(Qt::WA_DeleteOnClose);*/
+
+        if (event->source() == this) {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        } else {
+            event->acceptProposedAction();
+        }
+    } else {
+        event->ignore();
+    }
+}
+
+void MainTabPage::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
+        if (event->source() == this) {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        } else {
+            event->acceptProposedAction();
+        }
+    } else {
+        event->ignore();
+    }
+}
+
+void MainTabPage::dragMoveEvent(QDragMoveEvent *event)
+{
+    if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
+        if (event->source() == this) {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        } else {
+            event->acceptProposedAction();
+        }
+    } else {
+        event->ignore();
+    }
+}
+

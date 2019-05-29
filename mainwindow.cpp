@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QString logPath = "debug/bufImage";
     QDir dir;
     dir.mkpath(logPath);
+    setAcceptDrops(true);
 }
 
 MainWindow::~MainWindow(){

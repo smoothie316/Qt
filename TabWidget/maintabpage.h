@@ -12,13 +12,14 @@
 #include <QScrollBar>
 #include <QPainter>
 #include <QPen>
+#include <QtWidgets>
 
 #include <ToolBtn/toolbtn.h>
 #include <colorselect.h>
 
 
 using namespace std;
-
+class QDropEvent;
 namespace Ui {
 class MainTabPage;
 }
@@ -43,6 +44,9 @@ protected:
     virtual void keyReleaseEvent(QKeyEvent* event) override;
     virtual void wheelEvent(QWheelEvent *event) override;
     void paintEvent(QPaintEvent* event) override;
+    virtual void dropEvent(QDropEvent *event) override;
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
 
 private:
     void adjustScrollBar(QScrollBar* scrollBar, int factor);
