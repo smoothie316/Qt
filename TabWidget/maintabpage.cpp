@@ -170,9 +170,9 @@ void MainTabPage::paintEvent(QPaintEvent *event){
     }
 
     if(clicked && this->clickedTool == 4){
-        QPixmap* eraseInfo = new QPixmap(tmpBuf->width(), tmpBuf->height());
-        eraseInfo->fill(Qt::transparent);
-        QPainter painter(eraseInfo);
+//        QPixmap* eraseInfo = new QPixmap(tmpBuf->width(), tmpBuf->height());
+//        eraseInfo->fill(Qt::transparent);
+        QPainter painter(tmpBuf);
         painter.setRenderHint(QPainter::Antialiasing, true);
         this->penSize = this->tools->eraseW->eraserSize;
         this->R = 255;
@@ -180,7 +180,10 @@ void MainTabPage::paintEvent(QPaintEvent *event){
         this->B = 255;
         this->penColor.setRgb(this->R, this->G, this->B);
 
+        this->draw(painter);
 
+        QPixmap buff= sumBuff();
+        this->setLayerPixel(&buff);
     }
 }
 
@@ -192,6 +195,8 @@ void MainTabPage::draw(QPainter &painter){
     if(prevPos == QPoint(0,0))
         return;
     painter.drawLine(this->prevPos, this->originPos);
+
+    update();
 }
 
 QPixmap MainTabPage::sumBuff(){
