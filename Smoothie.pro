@@ -57,6 +57,7 @@ HEADERS += \
         ToolBtn/setbrushwidget.h \
         colorselect.h \
 
+
 FORMS += \
         mainwindow.ui \
         TabWidget/maintabpage.ui \
