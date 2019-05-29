@@ -45,10 +45,10 @@ protected:
     virtual void keyPressEvent(QKeyEvent* event) override;
     virtual void keyReleaseEvent(QKeyEvent* event) override;
     virtual void wheelEvent(QWheelEvent *event) override;
+
     virtual void dropEvent(QDropEvent *event) override;
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
-
 
 private:
     void adjustScrollBar(QScrollBar* scrollBar, int factor);
