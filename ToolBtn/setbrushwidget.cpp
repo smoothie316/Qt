@@ -34,6 +34,16 @@ void SetBrushWidget::on_SizeSlider_sliderMoved(int position)
     ui->SizeLineEdit->setText(QString::number(this->brushSize));
 }
 
+void SetBrushWidget::getRGB(int &R, int &G, int &B){
+    R = this->R;
+    G = this->G;
+    B = this->B;
+}
+
+void SetBrushWidget::getSize(int &size){
+    size = this->brushSize;
+}
+
 void SetBrushWidget::RGBSliderMoved(int position, int RGBInfo){
     switch(RGBInfo){
     case 0:

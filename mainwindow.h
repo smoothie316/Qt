@@ -43,6 +43,9 @@ private slots:
     void on_LayerUp_clicked();
     void on_LayerDown_clicked();
 
+public slots:
+    void drawEnd();
+
 // 함수 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
@@ -54,6 +57,8 @@ private:
     void resetAllLayerName();
     void layerSwap(int a, int b);
     void labelSwap(int a, int b);
+    void resetLabel(int index);
+    void resetLayer(int index);
     QPixmap sumBuff();
 
 // 변수

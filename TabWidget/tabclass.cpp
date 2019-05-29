@@ -6,7 +6,7 @@
 
 TabClass::TabClass(QWidget *parent) : QWidget(parent)
 {
-
+    this->_parent = parent;
 }
 
 void TabClass::mainCreateImage(QStringList imageList){
@@ -17,7 +17,7 @@ void TabClass::mainCreateImage(QStringList imageList){
 
         if(img->load(imageList[i])){
             QImage tmpImg =img->convertToFormat(QImage::Format_ARGB32_Premultiplied);
-            qDebug() << tmpImg.alphaChannel();
+            //qDebug() << tmpImg.alphaChannel();
             *buffer = QPixmap::fromImage(tmpImg);
             *buffer = buffer->scaled(tmpImg.width(), tmpImg.height(), Qt::KeepAspectRatio);
             this->bufferList.push_back(buffer);
@@ -26,7 +26,7 @@ void TabClass::mainCreateImage(QStringList imageList){
             // 파일 열기 실패
         }
 
-        mainPage = new MainTabPage();
+        mainPage = new MainTabPage(_parent);
         mainPage->setImage(buffer, this->width(), this->height());
         mainPageList.push_back(mainPage);
         emit this->addMainTab(mainPage, imageList[i]);

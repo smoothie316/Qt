@@ -22,6 +22,7 @@ public:
     QStringList keywordFileRead();
 public:
     bool removeDir(const QString & dirName);
+    void removeAllDir();
 private:
     QStringList keywordList;
 };

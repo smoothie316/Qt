@@ -34,6 +34,7 @@ private:
     MainTabPage* mainPage;
     SubTabPage* subPage;
     vector<QPixmap*> bufferList;
+    QWidget* _parent;
 
 public:
     vector<MainTabPage*> mainPageList;

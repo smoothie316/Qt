@@ -8,7 +8,7 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
-    this->tabs = new TabClass();
+    this->tabs = new TabClass(this);
     this->fileIO = new FileClass();
     connect(fileIO, SIGNAL(createImage(QStringList)), tabs, SLOT(mainCreateImage(QStringList)));
     connect(tabs, SIGNAL(addMainTab(QWidget*, QString)), this, SLOT(addMainTab(QWidget*, QString)));
@@ -24,13 +24,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->totalPages = -1;
     this->currentBufNum = 0;
     //bufImage 폴더 생성
-    QString logPath = "bufImage";
+    QString logPath = "debug/bufImage";
     QDir dir;
     dir.mkpath(logPath);
 }
 
 MainWindow::~MainWindow(){
-    FileClass().removeDir("bufImage");
+    QString filePath = QApplication::applicationDirPath();
+    //FileClass().removeDir("debug/bufImage");
+    FileClass().removeAllDir();
     //bufImage 폴더 삭제
     delete ui;
 }
@@ -40,11 +42,26 @@ bool MainWindow::eventFilter(QObject* object, QEvent* event){
         //마우스 클릭 이벤트 발생시
         QStringList list = object->objectName().split(",");
         this->currentBufNum = list[1].toInt();
+        this->tabs->mainPageList.at(this->currentPage)->currentBufNum = this->currentBufNum;
         qDebug() << this->currentBufNum;
         this->currentBuff = this->layerInfo.at(this->currentPage).at(this->currentBufNum);
         return true;
     }
     return QWidget::eventFilter(object, event);
+}
+
+void MainWindow::drawEnd(){
+    for(int i=0; i<this->labelInfo.at(this->currentPage).size(); i++){
+        //this->labelInfo.at(this->currentPage).at(i)->clear();
+        this->labelInfo.at(this->currentPage).at(i)->setPixmap(
+                    (this->layerInfo.at(this->currentPage).at(i))->scaled(this->labelInfo.at(this->currentPage).at(i)->width(),
+                                                                          this->labelInfo.at(this->currentPage).at(i)->height(),
+                                                                          Qt::KeepAspectRatio));
+        this->labelInfo.at(this->currentPage).at(i)->show();
+    }
+    QPixmap buff = sumBuff();
+    emit resetPixmap(&buff, this->currentPage);
+    this->update();
 }
 
 // Tab page 관련 설정
@@ -55,6 +72,7 @@ void MainWindow::addMainTab(QWidget* page, QString name){
     QString style = "border-color:rgb(0,0,0); border-width:1.2px; border-style:solid;";
 
     this->totalPages++;
+    this->tabs->mainPageList.at(this->totalPages)->tools = this->tools;
     vector<QPixmap*> tmpVec;
     QWidget* widget = new QWidget();
     QGridLayout* grid = new QGridLayout();
@@ -69,11 +87,12 @@ void MainWindow::addMainTab(QWidget* page, QString name){
     this->layerInfo.insert(make_pair(this->totalPages, tmpVec));
     tmpLayer->setObjectName(QString::number(this->totalPages)+ "," + QString::number(0));
     tmpLayer->setStyleSheet(style);
-
+    this->tabs->mainPageList.at(this->totalPages)->layerInfo =
+            &(this->layerInfo.at(this->totalPages));
     //bufImage 폴더에 임시 저장
     QStringList nameList = name.split("/");
     int listCount = name.split("/").length()-1;
-    QString filename ="bufImage/"+ nameList[listCount];
+    QString filename ="debug/bufImage/"+ nameList[listCount];
     tmpBuf->save(filename,"PNG");
     qDebug() << filename;
 
@@ -96,11 +115,33 @@ void MainWindow::on_MainTab_tabCloseRequested(int index){
     qDebug() << name;
     QStringList nameList = name.split("/");
     int listCount = name.split("/").length()-1;
-    QString filename ="bufImage/"+ nameList[listCount];
+    QString filename ="debug/bufImage/"+ nameList[listCount];
     QFile::remove(filename);
 
     ui->MainTab->removeTab(index);
+    this->resetLabel(index);
+    this->resetLayer(index);
     ui->LayerWidget->removeWidget(ui->LayerWidget->currentWidget());
+}
+
+void MainWindow::resetLabel(int index){
+    map<int, vector<QLabel*> > tmpLabelInfo;
+    tmpLabelInfo.swap(this->labelInfo);
+    tmpLabelInfo.erase(tmpLabelInfo.find(index));
+    int i = 0;
+    for(auto itr = tmpLabelInfo.begin(); itr != tmpLabelInfo.end(); ++itr){
+        this->labelInfo.insert(make_pair(i++, itr->second));
+    }
+}
+
+void MainWindow::resetLayer(int index){
+    map<int, vector<QPixmap*> > tmpLayerInfo;
+    tmpLayerInfo.swap(this->layerInfo);
+    tmpLayerInfo.erase(tmpLayerInfo.find(index));
+    int i=0;
+    for(auto itr = tmpLayerInfo.begin(); itr != tmpLayerInfo.end(); ++itr){
+        this->layerInfo.insert(make_pair(i++, itr->second));
+    }
 }
 
 void MainWindow::on_LayerCreate_clicked(){
@@ -119,7 +160,7 @@ void MainWindow::on_LayerCreate_clicked(){
     qDebug() << this->currentBufNum;
     QWidget* widget = this->ui->LayerWidget->currentWidget();
     QLabel* tmpLayer = new QLabel(widget);
-    tmpLayer->setPixmap(tmpPix->scaled(this->width(), this->height(), Qt::KeepAspectRatio));
+    tmpLayer->setPixmap(tmpPix->scaled(ui->LayerWidget->width(), ui->LayerWidget->height(), Qt::KeepAspectRatio));
     tmpLayer->setObjectName(QString::number(this->currentPage)+ "," + QString::number(this->currentBufNum));
     this->layerInfo.at(this->currentPage).push_back(tmpPix);
     this->labelInfo.at(this->currentPage).push_back(tmpLayer);
@@ -128,8 +169,6 @@ void MainWindow::on_LayerCreate_clicked(){
 
     widget->layout()->addWidget(tmpLayer);
     // MainPage QLabel 새로그리는 Event 발생
-
-
     QPixmap buff = sumBuff();
     emit resetPixmap(&buff, this->currentPage);
 }
@@ -145,7 +184,6 @@ void MainWindow::on_LayerDel_clicked(){
     delete widget;
     this->resetAllLayerName();
     // MainPage QLabel 새로그리는 Event 발생시키기
-
 
     QPixmap buff = sumBuff();
     emit resetPixmap(&buff, this->currentPage);
@@ -183,6 +221,7 @@ QPixmap MainWindow::sumBuff(){
     QPixmap buff;
     QPixmap *origin = this->layerInfo.at(this->currentPage).at(0);
     QImage* finalImage = new QImage(origin->width(), origin->height(), QImage::Format_ARGB32_Premultiplied);
+    finalImage->fill(Qt::transparent);
     for(int k = this->layerInfo.at(this->currentPage).size()-1; k >= 0  ; k-- ){
         QImage tmp = this->layerInfo.at(this->currentPage).at(k)->toImage();
         for(int i = 0; i<origin->width(); i++){
@@ -249,29 +288,35 @@ void MainWindow::on_Lasso_clicked(){
 }
 void MainWindow::on_Brush_clicked(){
     this->recentClickedTool = 1;
+    this->tabs->mainPageList.at(this->currentPage)->clickedTool = this->recentClickedTool;
     ui->ToolStack->addWidget(this->tools->brushW);
     ui->ToolStack->setCurrentIndex(1);
 }
 void MainWindow::on_Paint_clicked(){
     this->recentClickedTool = 2;
+    this->tabs->mainPageList.at(this->currentPage)->clickedTool = this->recentClickedTool;
     ui->ToolStack->addWidget(this->tools->paintW);
     ui->ToolStack->setCurrentIndex(1);
 }
 void MainWindow::on_Text_clicked(){
     this->recentClickedTool = 3;
+    this->tabs->mainPageList.at(this->currentPage)->clickedTool = this->recentClickedTool;
     ui->ToolStack->addWidget(this->tools->textW);
     ui->ToolStack->setCurrentIndex(1);
 }
 void MainWindow::on_Erase_clicked(){
     this->recentClickedTool = 4;
+    this->tabs->mainPageList.at(this->currentPage)->clickedTool = this->recentClickedTool;
     ui->ToolStack->addWidget(this->tools->eraseW);
     ui->ToolStack->setCurrentIndex(1);
 }
 void MainWindow::on_Crop_clicked(){
     this->recentClickedTool = 5;
+    this->tabs->mainPageList.at(this->currentPage)->clickedTool = this->recentClickedTool;
 }
 void MainWindow::on_Resize_clicked(){
     this->recentClickedTool = 6;
+    this->tabs->mainPageList.at(this->currentPage)->clickedTool = this->recentClickedTool;
 }
 void MainWindow::changeToolPage(){
 
