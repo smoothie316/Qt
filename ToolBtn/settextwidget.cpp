@@ -34,6 +34,7 @@ SetTextWidget::SetTextWidget(QWidget *parent) :
     connect(csBack, SIGNAL(radioClicked(int, int, int)), this, SLOT(colorRadioClicked(int, int, int)));
 
     this->textBackgroundColor = false;
+    this->isFontChanged = false;
 
     ui->TextBackgroundColorLabel->setAutoFillBackground(true);
 }
@@ -55,11 +56,15 @@ void SetTextWidget::on_ColorSelect2_clicked(){
 
 void SetTextWidget::on_fontComboBox_currentFontChanged(const QFont &f){
     //set font
+    this->isFontChanged = true;
+    this->textFont = f;
 }
 
 void SetTextWidget::on_SizeSlider_sliderMoved(int position){
     this->fontSize = position;
     ui->SizeLineEdit->setText(QString::number(this->fontSize));
+    this->isFontChanged = true;
+    this->textFont.setPointSize(this->fontSize);
 }
 
 void SetTextWidget::RGBSliderMoved(int position, int RGBInfo){

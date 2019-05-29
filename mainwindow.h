@@ -45,6 +45,7 @@ private slots:
 
 public slots:
     void drawEnd();
+    void addTextLayer(QPixmap* pix, QLabel* label);
 
 // 함수 
 public:

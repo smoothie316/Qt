@@ -146,7 +146,6 @@ void MainWindow::resetLayer(int index){
 
 void MainWindow::on_LayerCreate_clicked(){
     // 레이어 추가 (create 버튼)
-
     // 테두리 추가
     QString style = "border-color:rgb(0,0,0); border-width:1.2px; border-style:solid;";
 
@@ -169,6 +168,14 @@ void MainWindow::on_LayerCreate_clicked(){
 
     widget->layout()->addWidget(tmpLayer);
     // MainPage QLabel 새로그리는 Event 발생
+    QPixmap buff = sumBuff();
+    emit resetPixmap(&buff, this->currentPage);
+}
+
+void MainWindow::addTextLayer(QPixmap* pix, QLabel* label){
+    this->currentBufNum =0;
+    this->layerInfo.at(this->currentPage).insert(this->layerInfo.at(this->currentPage).begin(), pix);
+    this->labelInfo.at(this->currentPage).insert(this->labelInfo.at(this->currentPage).begin(), label);
     QPixmap buff = sumBuff();
     emit resetPixmap(&buff, this->currentPage);
 }

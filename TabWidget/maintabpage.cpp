@@ -12,6 +12,7 @@ MainTabPage::MainTabPage(QWidget *parent) :
     ui->setupUi(this);
 
     connect(this, SIGNAL(drawEnd()), parent, SLOT(drawEnd()));
+    connect(this, SIGNAL(addTextLayer(QPixmap*, QLabel*)), parent, SLOT(addTextLayer(QPixmap*, QLabel*)));
 
     this->buf= nullptr;
     this->clickedTool = 1;
@@ -72,11 +73,29 @@ void MainTabPage::setMouseCursor(){
 
     }
 }
+
 bool MainTabPage::eventFilter(QObject* object, QEvent *event){\
     if(object->objectName() == "canvas"){
         if(event->type() == QMouseEvent::MouseButtonPress){
-//            qDebug() << this->bufSize;
-//            qDebug() << this->layerSet.at(0)->size();
+
+        }
+    }
+    else {
+        QStringList list = object->objectName().split("_");
+        if(list[0] == "text"){
+            if(event->type() == QMouseEvent::MouseButtonPress){
+                // 텍스트 입력시 입력되게
+                this->textInputStart = true;
+            }
+            if(event->type() == QMouseEvent::MouseButtonDblClick){
+                // layer 저장
+                QString style= "";
+                QLabel* tmpLabel = this->textSet.at(this->activeText);
+                tmpLabel->setStyleSheet(style);
+                this->textInputStart = false;
+                this->textInput = false;
+                emit addTextLayer(this->textPix, tmpLabel);
+            }
         }
     }
     return QWidget::eventFilter(object, event);
@@ -85,6 +104,35 @@ bool MainTabPage::eventFilter(QObject* object, QEvent *event){\
 void MainTabPage::keyPressEvent(QKeyEvent *event){
     if(event->modifiers() == Qt::CTRL)
         ctrlKey = true;
+    if(textInputStart){
+        QLabel* tmpLabel = this->textSet.at(this->activeText);
+        if(event->key() == Qt::Key_Backspace){
+            this->textInputted = this->textInputted.mid(0, this->textInputted.length()-1);
+        }
+        else if(event->key() == Qt::Key_Enter){
+            this->textInputted += "\n";
+        }
+        else{
+           this->textInputted += event->text();
+        }
+        this->textPix = new QPixmap(tmpLabel->width(), tmpLabel->height());
+        this->textPix->fill(Qt::transparent);
+        QPainter painter(this->textPix);
+        int R, G, B, A;
+        R = this->tools->textW->textR;
+        G = this->tools->textW->textG;
+        B = this->tools->textW->textB;
+        A = this->tools->textW->textA;
+        painter.setPen(QColor(R,G,B,A));
+        painter.setFont(this->tools->textW->textFont);
+
+        QRect rect(0,0, tmpLabel->width(), tmpLabel->height());
+        painter.drawText(rect, Qt::AlignCenter | Qt::TextWordWrap, this->textInputted);
+        painter.end();
+
+        tmpLabel->setPixmap(*(this->textPix));
+        tmpLabel->show();
+    }
 }
 void MainTabPage::keyReleaseEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_Control){
@@ -101,93 +149,132 @@ void MainTabPage::wheelEvent(QWheelEvent *event){
         this->w = w;
         this->h = h;
         for(int i=0; i<this->layerSet.size(); i++){
-            //this->layerSet[i]->setGeometry(0,0,w,h);
             this->layerSet[i]->clear();
             this->layerSet[i]->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
             bufSize = buf->scaled(w,h,Qt::KeepAspectRatio).size();
-            //bufSize = this->layerSet[i]->size();
         }
     }
 }
 
 void MainTabPage::mousePressEvent(QMouseEvent *event){
     this->prevPos = QPoint(0,0);
+     QSize widgetSize = this->layerSet.at(0)->size();
     if(event->button() == Qt::LeftButton){
-        //prevPos = event->pos();
         if(this->layerInfo->at(this->currentBufNum)->width() > this->layerInfo->at(this->currentBufNum)->height()){
-            QSize widgetSize = this->layerSet.at(0)->size();
-            //qDebug() << widgetSize;
             double ratio = bufSize.height() / (double)widgetSize.height();
-            //qDebug() << ratio;
             originPos.setY((int)(event->y() - ((widgetSize.height()-bufSize.height())/2)));
             originPos.setX(event->x());
         }
         else {
-            double ratio = (this->layerInfo->at(this->currentBufNum)->width()) / (bufSize.width());
+            double ratio = bufSize.width() / (double)widgetSize.width();
+            originPos.setX((int)(event->x() - ((widgetSize.width()-bufSize.width())/2)));
+            originPos.setY(event->y());
         }
-        //originPos = event->pos();
         clicked = true;
-        qDebug() << "clicked";
+
+        if(this->clickedTool == 3 && !textInput){
+            this->textStart = event->pos();
+        }
     }
 }
 
 void MainTabPage::mouseMoveEvent(QMouseEvent *event){
-
+    QSize widgetSize = this->layerSet.at(0)->size();
     if((event->buttons() & Qt::LeftButton)){
         if(this->layerInfo->at(this->currentBufNum)->width() > this->layerInfo->at(this->currentBufNum)->height()){
-            QSize widgetSize = this->layerSet.at(0)->size();
             double ratio = bufSize.height() / (double)widgetSize.height();
-            //int y= event->y() - ((widgetSize.height()-bufSize.height())/2);
             prevPos = originPos;
             originPos.setY((int)(event->y() - ((widgetSize.height()-bufSize.height())/2)));
             originPos.setX(event->x());
         }
         else {
-            double ratio = (this->layerInfo->at(this->currentBufNum)->width()) / (bufSize.width());
+            double ratio = bufSize.width() / (double)widgetSize.width();
+            originPos.setX((int)(event->x() - ((widgetSize.width()-bufSize.width())/2)));
+            originPos.setY(event->y());
         }
         clicked = true;
+        if(this->clickedTool == 1){
+            // brush
+            QPixmap* tmpBuf = this->layerInfo->at(this->currentBufNum);
+            *tmpBuf = tmpBuf->scaled(bufSize.width(), bufSize.height(), Qt::KeepAspectRatio);
+            QPainter painter(tmpBuf);
+            int R, G, B, size;
+            this->tools->brushW->getRGB(R, G, B);
+            this->tools->brushW->getSize(size);
+            this->draw(painter, R, G, B, size);
+        }
+        else if(this->clickedTool == 4){
+            // eraser
+            QPixmap* tmpBuf = this->layerInfo->at(this->currentBufNum);
+            *tmpBuf = tmpBuf->scaled(bufSize.width(), bufSize.height(), Qt::KeepAspectRatio);
+            QPainter painter(tmpBuf);
+            this->draw(painter, 255, 255, 255, this->tools->eraseW->eraserSize);
+        }
+        if(this->clickedTool == 3 && !textInput){
+            // text
+            this->textEnd = event->pos();
+        }
     }
+    this->update();
 }
 
 void MainTabPage::mouseReleaseEvent(QMouseEvent *event){
     clicked = false;
-    emit drawEnd();
-}
-
-void MainTabPage::paintEvent(QPaintEvent *event){
-    QPixmap* tmpBuf = this->layerInfo->at(this->currentBufNum);
-    *tmpBuf = tmpBuf->scaled(bufSize.width(), bufSize.height(), Qt::KeepAspectRatio);
-    if(clicked && this->clickedTool == 1){
-        QPainter painter(tmpBuf);
-        painter.setRenderHint(QPainter::Antialiasing, true);
-        this->tools->brushW->getRGB(R,G,B);
-        this->tools->brushW->getSize(this->penSize);
-
-        this->draw(painter);
-
-        QPixmap buff = sumBuff();
-        this->setLayerPixel(&buff);
-    }
-
-    if(clicked && this->clickedTool == 4){
-//        QPixmap* eraseInfo = new QPixmap(tmpBuf->width(), tmpBuf->height());
-//        eraseInfo->fill(Qt::transparent);
-        QPainter painter(tmpBuf);
-        painter.setRenderHint(QPainter::Antialiasing, true);
-        this->penSize = this->tools->eraseW->eraserSize;
-        this->R = 255;
-        this->G = 255;
-        this->B = 255;
-        this->penColor.setRgb(this->R, this->G, this->B);
-
-        this->draw(painter);
-
-        QPixmap buff= sumBuff();
-        this->setLayerPixel(&buff);
+    if(this->clickedTool == 1 || this->clickedTool == 4)
+        emit drawEnd();
+    if(this->clickedTool == 3){
+        QString style = "border-color:rgb(0,0,0); border-width:1.2px; border-style:solid;";
+        QString style2 = "";
+        QLabel* text = new QLabel(this);
+        text->installEventFilter(this);
+        text->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+        QRect textRect(this->textStart, this->textEnd);
+        text->setGeometry(textRect);
+        if(this->activeText != -1)
+            this->textSet.at(this->activeText)->setStyleSheet(style2);
+        text->setStyleSheet(style);
+        if(this->tools->textW->isFontChanged)
+            text->setFont(this->tools->textW->textFont);
+        text->show();
+        this->activeText = this->textSet.size();
+        text->setObjectName("text_"+QString::number(this->activeText));
+        this->textSet.push_back(text);
+        this->textInput = true;
     }
 }
 
-void MainTabPage::draw(QPainter &painter){
+//void MainTabPage::setTextColor(QLabel* text){
+//    QBrush* textBrush = new QBrush(QColor(this->tools->textW->textR, this->tools->textW->textG, this->tools->textW->textB, this->tools->textW->textA));
+//    QBrush* back = new QBrush(QColor(this->tools->textW->backR, this->tools->textW->backG, this->tools->textW->backB, this->tools->textW->backA));
+//    textBrush->setStyle(Qt::SolidPattern);
+//    back->setStyle(Qt::SolidPattern);
+
+//    QPalette pText;
+//    QPalette pBack;
+
+//    pText.setBrush(QPalette::Active, QPalette::WindowText, *(textBrush));
+//    pText.setBrush(QPalette::Inactive, QPalette::WindowText, *(textBrush));
+
+//    pBack.setBrush(QPalette::Active, QPalette::Window, *(back));
+//    pBack.setBrush(QPalette::Inactive, QPalette::Window, *(back));
+
+//    text->setPalette(pText);
+//    text->show();
+//    text->setPalette(pBack);
+//    text->show();
+//}
+
+//void MainTabPage::paintEvent(QPaintEvent *event){
+
+//}
+
+void MainTabPage::draw(QPainter &painter, int R, int G, int B, int size){
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    this->penSize = size;
+    this->R = R;
+    this->G = G;
+    this->B = B;
+    this->penColor.setRgb(this->R, this->G, this->B);
     this->penColor.setRgb(this->R, this->G, this->B);
     this->paintPen.setColor(this->penColor);
     this->paintPen.setWidth(this->penSize);
@@ -196,7 +283,8 @@ void MainTabPage::draw(QPainter &painter){
         return;
     painter.drawLine(this->prevPos, this->originPos);
 
-    update();
+    QPixmap buff= sumBuff();
+    this->setLayerPixel(&buff);
 }
 
 QPixmap MainTabPage::sumBuff(){

@@ -40,7 +40,12 @@ private:
 
 // 변수
 public:
-
+    QFont textFont;
+    int textR, textG, textB, textA;
+    int backR, backG, backB, backA;
+    int fontSize = 11;
+    bool textBackgroundColor;
+    bool isFontChanged;
 protected:
 
 private:
@@ -49,13 +54,7 @@ private:
     ColorSelect *csBack;
     QDockWidget *csDockText;
     QDockWidget *csDockBack;
-
     int R, G, B, A;
-    int textR, textG, textB, textA;
-    int backR, backG, backB, backA;
-    int fontSize = 11;
-
-    bool textBackgroundColor;
 
     QBrush* textBrush;
     QBrush* textBackgroundBrush;

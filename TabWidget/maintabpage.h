@@ -28,6 +28,7 @@ class MainTabPage : public QWidget
     Q_OBJECT
 signals:
     void drawEnd();
+    void addTextLayer(QPixmap* pix, QLabel* label);
 public:
     explicit MainTabPage(QWidget *parent = nullptr);
     ~MainTabPage() override;
@@ -42,11 +43,12 @@ protected:
     virtual void keyPressEvent(QKeyEvent* event) override;
     virtual void keyReleaseEvent(QKeyEvent* event) override;
     virtual void wheelEvent(QWheelEvent *event) override;
-    void paintEvent(QPaintEvent* event) override;
+    //void paintEvent(QPaintEvent* event) override;
 
 private:
     void adjustScrollBar(QScrollBar* scrollBar, int factor);
-    void draw(QPainter &painter);
+    void draw(QPainter &painter, int R, int G, int B, int size);
+    //void setTextColor(QLabel* text);
 private slots:
 
 private:
@@ -54,6 +56,7 @@ private:
     QPixmap* buf;
     QPixmap* cursorPix;
     vector<QLabel*> layerSet;
+    vector<QLabel*> textSet;
     bool ctrlKey =false;
 
     int w, h;
@@ -67,6 +70,11 @@ private:
     int R, G, B;
     int penSize;
 
+    int activeText =-1;
+    bool textInput = false;
+    bool textInputStart = false;
+    QString textInputted;
+    QPixmap* textPix;
 public:
     /*
     Brush : 1
@@ -81,6 +89,7 @@ public:
     vector<QPixmap*>* layerInfo;
     ToolBtn* tools;
     QPoint originPos, prevPos;
+    QPoint textStart, textEnd;
 
 public:
     void setImage(QPixmap *bufferm, int w, int h);
