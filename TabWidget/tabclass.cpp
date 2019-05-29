@@ -6,7 +6,7 @@
 
 TabClass::TabClass(QWidget *parent) : QWidget(parent)
 {
-
+    this->_parent = parent;
 }
 
 void TabClass::mainCreateImage(QStringList imageList){
@@ -26,7 +26,7 @@ void TabClass::mainCreateImage(QStringList imageList){
             // 파일 열기 실패
         }
 
-        mainPage = new MainTabPage();
+        mainPage = new MainTabPage(_parent);
         mainPage->setImage(buffer, this->width(), this->height());
         mainPageList.push_back(mainPage);
         emit this->addMainTab(mainPage, imageList[i]);

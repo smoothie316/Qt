@@ -10,16 +10,15 @@
 #include <QWheelEvent>
 #include <QPaintEvent>
 #include <QScrollBar>
+#include <QPainter>
+#include <QPen>
 
 #include <ToolBtn/toolbtn.h>
 #include <colorselect.h>
-#include <Paint/shape.h>
 
-#include <functional>
-#include <memory>
 
 using namespace std;
-using namespace Paint;
+
 namespace Ui {
 class MainTabPage;
 }
@@ -27,7 +26,8 @@ class MainTabPage;
 class MainTabPage : public QWidget
 {
     Q_OBJECT
-
+signals:
+    void drawEnd();
 public:
     explicit MainTabPage(QWidget *parent = nullptr);
     ~MainTabPage() override;
@@ -36,16 +36,17 @@ protected:
     void resizeEvent(QResizeEvent* event) override;
     bool eventFilter(QObject *object, QEvent *event);
     //virtual void   mouseDoubleClickEvent ( QMouseEvent * event );
-    virtual void   mouseMoveEvent ( QMouseEvent * event ) override;
-    virtual void   mousePressEvent ( QMouseEvent * event ) override;
-    virtual void   mouseReleaseEvent ( QMouseEvent * event ) override;
+    virtual void mouseMoveEvent ( QMouseEvent * event ) override;
+    virtual void mousePressEvent ( QMouseEvent * event ) override;
+    virtual void mouseReleaseEvent ( QMouseEvent * event ) override;
     virtual void keyPressEvent(QKeyEvent* event) override;
     virtual void keyReleaseEvent(QKeyEvent* event) override;
     virtual void wheelEvent(QWheelEvent *event) override;
-    virtual void paintEvent(QPaintEvent* event) override;
+    void paintEvent(QPaintEvent* event) override;
 
 private:
     void adjustScrollBar(QScrollBar* scrollBar, int factor);
+    void draw(QPainter &painter);
 private slots:
 
 private:
@@ -60,6 +61,12 @@ private:
 
     QSize bufSize;
     bool clicked = false;
+
+    QColor penColor;
+    QPen paintPen;
+    int R, G, B;
+    int penSize;
+
 public:
     /*
     Brush : 1
@@ -73,13 +80,7 @@ public:
     int currentBufNum = 0;
     vector<QPixmap*>* layerInfo;
     ToolBtn* tools;
-
-    typedef std::function<
-        std::unique_ptr<Shape>(
-            const QPoint&, int, const QColor&)> shape_factory_t;
-
-    std::unique_ptr<Shape> currentShape;
-    QPoint originPos, nextPos;
+    QPoint originPos, prevPos;
 
 public:
     void setImage(QPixmap *bufferm, int w, int h);

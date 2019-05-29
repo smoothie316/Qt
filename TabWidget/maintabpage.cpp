@@ -11,13 +11,15 @@ MainTabPage::MainTabPage(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //ui->MainEdit->setWidgetResizable(true);
+    connect(this, SIGNAL(drawEnd()), parent, SLOT(drawEnd()));
 
     this->buf= nullptr;
     this->clickedTool = 1;
     this->setMouseCursor();
     this->w = 0;
     this->h = 0;
+    originPos = QPoint(0,0);
+    prevPos = QPoint(0,0);
 }
 
 MainTabPage::~MainTabPage()
@@ -33,7 +35,7 @@ void MainTabPage::setImage(QPixmap* buffer, int w, int h){
     layer->installEventFilter(this);
     this->w = w;
     this->h = h;
-    layer->installEventFilter(this);
+    //layer->installEventFilter(this);
     layer->setMouseTracking(true);
     layer->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
     bufSize = buf->scaled(w,h,Qt::KeepAspectRatio).size();
@@ -109,28 +111,36 @@ void MainTabPage::wheelEvent(QWheelEvent *event){
 }
 
 void MainTabPage::mousePressEvent(QMouseEvent *event){
+    this->prevPos = QPoint(0,0);
     if(event->button() == Qt::LeftButton){
+        //prevPos = event->pos();
         if(this->layerInfo->at(this->currentBufNum)->width() > this->layerInfo->at(this->currentBufNum)->height()){
-            double ratio = (this->layerInfo->at(this->currentBufNum)->height()) / (double)(bufSize.height());
             QSize widgetSize = this->layerSet.at(0)->size();
-            originPos.setY((int)(event->y() * ratio) + ((widgetSize.height()-bufSize.height())/2));
-            originPos.setX(event->x() * ratio);
+            //qDebug() << widgetSize;
+            double ratio = bufSize.height() / (double)widgetSize.height();
+            //qDebug() << ratio;
+            originPos.setY((int)(event->y() - ((widgetSize.height()-bufSize.height())/2)));
+            originPos.setX(event->x());
         }
         else {
             double ratio = (this->layerInfo->at(this->currentBufNum)->width()) / (bufSize.width());
         }
         //originPos = event->pos();
         clicked = true;
+        qDebug() << "clicked";
     }
 }
 
 void MainTabPage::mouseMoveEvent(QMouseEvent *event){
+
     if((event->buttons() & Qt::LeftButton)){
         if(this->layerInfo->at(this->currentBufNum)->width() > this->layerInfo->at(this->currentBufNum)->height()){
-            double ratio = (this->layerInfo->at(this->currentBufNum)->height()) / (double)(bufSize.height());
             QSize widgetSize = this->layerSet.at(0)->size();
-            originPos.setY((int)(event->y() * ratio) + ((widgetSize.height()-bufSize.height())/2));
-            originPos.setX(event->x() * ratio);
+            double ratio = bufSize.height() / (double)widgetSize.height();
+            //int y= event->y() - ((widgetSize.height()-bufSize.height())/2);
+            prevPos = originPos;
+            originPos.setY((int)(event->y() - ((widgetSize.height()-bufSize.height())/2)));
+            originPos.setX(event->x());
         }
         else {
             double ratio = (this->layerInfo->at(this->currentBufNum)->width()) / (bufSize.width());
@@ -141,31 +151,54 @@ void MainTabPage::mouseMoveEvent(QMouseEvent *event){
 
 void MainTabPage::mouseReleaseEvent(QMouseEvent *event){
     clicked = false;
+    emit drawEnd();
 }
 
 void MainTabPage::paintEvent(QPaintEvent *event){
-    if(clicked){
-        QPainter painter(this->layerInfo->at(this->currentBufNum));
+    QPixmap* tmpBuf = this->layerInfo->at(this->currentBufNum);
+    *tmpBuf = tmpBuf->scaled(bufSize.width(), bufSize.height(), Qt::KeepAspectRatio);
+    if(clicked && this->clickedTool == 1){
+        QPainter painter(tmpBuf);
         painter.setRenderHint(QPainter::Antialiasing, true);
-        int R, G, B;
         this->tools->brushW->getRGB(R,G,B);
-        QPen paintPen(QColor(R,G,B));
-        int size =0;
-        this->tools->brushW->getSize(size);
-        paintPen.setWidth(size);
-        painter.setPen(paintPen);
-        painter.drawPoint(originPos);
-        QPixmap buf = sumBuff();
-        this->setLayerPixel(&buf);
-        //painter.end();
-        update();
+        this->tools->brushW->getSize(this->penSize);
+
+        this->draw(painter);
+
+        QPixmap buff = sumBuff();
+        this->setLayerPixel(&buff);
     }
+
+    if(clicked && this->clickedTool == 4){
+        QPixmap* eraseInfo = new QPixmap(tmpBuf->width(), tmpBuf->height());
+        eraseInfo->fill(Qt::transparent);
+        QPainter painter(eraseInfo);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        this->penSize = this->tools->eraseW->eraserSize;
+        this->R = 255;
+        this->G = 255;
+        this->B = 255;
+        this->penColor.setRgb(this->R, this->G, this->B);
+
+
+    }
+}
+
+void MainTabPage::draw(QPainter &painter){
+    this->penColor.setRgb(this->R, this->G, this->B);
+    this->paintPen.setColor(this->penColor);
+    this->paintPen.setWidth(this->penSize);
+    painter.setPen(this->paintPen);
+    if(prevPos == QPoint(0,0))
+        return;
+    painter.drawLine(this->prevPos, this->originPos);
 }
 
 QPixmap MainTabPage::sumBuff(){
     QPixmap buff;
-    QPixmap *origin = this->layerInfo->at(this->currentBufNum);
+    QPixmap *origin = this->layerInfo->at(0);
     QImage* finalImage = new QImage(origin->width(), origin->height(), QImage::Format_ARGB32_Premultiplied);
+    finalImage->fill(Qt::transparent);
     for(int k = this->layerInfo->size()-1; k >= 0  ; k-- ){
         QImage tmp = this->layerInfo->at(k)->toImage();
         for(int i = 0; i<origin->width(); i++){
@@ -200,6 +233,7 @@ void MainTabPage::setLayerPixel(QPixmap* buf){
     QLabel* label = this->layerSet.at(0);
     int w = label->width();
     int h = label->height();
+    label->clear();
     label->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
-    label->show();
+    update();
 }
