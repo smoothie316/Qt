@@ -49,45 +49,45 @@ void KeywordInput::on_bnAdd_clicked()
     this->_className = ui->lnEdit->text();
     this->close();
 
-//    //inputName의폴더 생성
-//    QString logPath = _className;
-//    QDir dir;
-//    dir.mkpath("debug/" + logPath);
+    //inputName의폴더 생성
+    QString logPath = _className;
+    QDir dir;
+    dir.mkpath("debug/" + logPath);
 
-//    // 실행 파일의 경로를 설정 한다.
-//    QString _exePath = "debug//lassoFunction//lasso.exe";
+    // 실행 파일의 경로를 설정 한다.
+    QString _exePath = "debug//lassoFunction//lasso.exe";
 
-//    // 실행 파일이 있는지 체크 한다.
-//    if (QFile::exists(_exePath))
-//    {
-//    // 실행 파일이 정상적으로 존재 한다면 QProcess 생성
-//    // 비교를 하는 이유는 다른 곳에서 생성했을 수도 있다.
-//        if (processEXE == NULL)
-//        {
-//            processEXE = new QProcess(this);
-//        }
-//    // 간혹 실행파일의 시작위치를 지정해 주지 않으면 오동작 하는 프로그램이 있다.
-//        //std::string _workingPath = (_exePath.toStdString()).substr(0, (_exePath.toStdString()).find_last_of('/') - 1);
-//        //processEXE->setWorkingDirectory(QString::fromStdString(_workingPath));
-//        processEXE->setWorkingDirectory("debug//lassoFunction");
-//    // 아규먼트가 필요하다면 이렇게 ..
-//        QStringList _arguments;
-//        _arguments << _className;
-//        _arguments << "debug/";
+    // 실행 파일이 있는지 체크 한다.
+    if (QFile::exists(_exePath))
+    {
+    // 실행 파일이 정상적으로 존재 한다면 QProcess 생성
+    // 비교를 하는 이유는 다른 곳에서 생성했을 수도 있다.
+        if (processEXE == NULL)
+        {
+            processEXE = new QProcess(this);
+        }
+    // 간혹 실행파일의 시작위치를 지정해 주지 않으면 오동작 하는 프로그램이 있다.
+        //std::string _workingPath = (_exePath.toStdString()).substr(0, (_exePath.toStdString()).find_last_of('/') - 1);
+        //processEXE->setWorkingDirectory(QString::fromStdString(_workingPath));
+        processEXE->setWorkingDirectory("debug//lassoFunction");
+    // 아규먼트가 필요하다면 이렇게 ..
+        QStringList _arguments;
+        _arguments << _className;
+        _arguments << "debug/";
 
-//        qDebug() << _arguments;
-//        qDebug() << _exePath;
-//    // 실행한다..
-//        qDebug() << processEXE->state();
-//        processEXE->start(_exePath, _arguments);
+        qDebug() << _arguments;
+        qDebug() << _exePath;
+    // 실행한다..
+        qDebug() << processEXE->state();
+        processEXE->start(_exePath, _arguments);
 
-//    // 아규먼트가 불필요 하다면 ...
-//    // processEXE->start(_exePath);
-//    }
+    // 아규먼트가 불필요 하다면 ...
+    // processEXE->start(_exePath);
+    }
 
 
-//    qDebug() << processEXE->state();
-//    qDebug() << "DONE";
+    qDebug() << processEXE->state();
+    qDebug() << "DONE";
     emit className(this->_className);
 
 
