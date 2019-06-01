@@ -310,7 +310,16 @@ void MainTabPage::mouseMoveEvent(QMouseEvent *event){
             QPainter painter(tmpBuf);
             this->draw(painter, 255, 255, 255, this->tools->eraseW->eraserSize);
         }
-        if(this->clickedTool == 3 && !textInput){
+        else if(this->clickedTool == 0 && this->iconClicked){
+            this->droppedPoint = event->pos();
+            QPoint endPos = this->droppedPoint;
+            endPos.setX(endPos.x() + this->iconSize.width());
+            endPos.setY(endPos.y() + this->iconSize.height());
+
+            QRect iconRect(this->droppedPoint, endPos);
+            this->iconSet.at(this->currentIconNum)->setGeometry(iconRect);
+        }
+        else if(this->clickedTool == 3 && !textInput){
             this->textEnd = event->pos();
         }
     }
