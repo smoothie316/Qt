@@ -17,15 +17,12 @@ void TabClass::mainCreateImage(QStringList imageList){
 
         if(img->load(imageList[i])){
             QImage tmpImg =img->convertToFormat(QImage::Format_ARGB32_Premultiplied);
-            //qDebug() << tmpImg.alphaChannel();
             *buffer = QPixmap::fromImage(tmpImg);
-            *buffer = buffer->scaled(tmpImg.width(), tmpImg.height(), Qt::KeepAspectRatio);
             this->bufferList.push_back(buffer);
         }
         else{
             // 파일 열기 실패
         }
-
         mainPage = new MainTabPage(_parent);
         mainPage->setImage(buffer, this->width(), this->height());
         mainPageList.push_back(mainPage);

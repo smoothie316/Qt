@@ -12,6 +12,7 @@ MainTabPage::MainTabPage(QWidget *parent) :
 
     connect(this, SIGNAL(drawEnd()), parent, SLOT(drawEnd()));
     connect(this, SIGNAL(addTextLayer(QPixmap*, QLabel*)), parent, SLOT(addTextLayer(QPixmap*, QLabel*)));
+    connect(this, SIGNAL(currentBufSize(QSize)), parent, SLOT(currentBufSize(QSize)));
 
     this->buf= nullptr;
     this->clickedTool = 1;
@@ -30,30 +31,28 @@ MainTabPage::~MainTabPage()
 }
 
 void MainTabPage::setImage(QPixmap* buffer, int w, int h){
-
-    //QString style = "border-color:rgb(0,0,0); border-width:1.2px; border-style:solid;";
-    buf = buffer;
+    this->buf = buffer;
     QLabel* layer = new QLabel();
+
+    // layeri event관련 설정
     layer->installEventFilter(this);
-    this->w = w;
-    this->h = h;
-    //layer->installEventFilter(this);
     layer->setMouseTracking(true);
+
+    // 화면에 맞춰 조절하여 출력
     layer->setPixmap(buf->scaled(w,h, Qt::KeepAspectRatio));
-    bufSize = buf->scaled(w,h,Qt::KeepAspectRatio).size();
-    bufSize = layer->size();
     layer->setObjectName("canvas");
+
     ui->MainEdit->setWidget(layer);
     this->layerSet.push_back(layer);
+
     qDebug() << "set Image";
     qDebug() << bufSize;
 }
 
 void MainTabPage::resizeEvent(QResizeEvent *event){
-    int w = event->size().width();
-    int h = event->size().height();
-    this->w = w;
-    this->h = h;
+    this->w = event->size().width();
+    this->h = event->size().height();
+
     qDebug() << "resize";
     // 해상도 저하
     if(!layerSet.empty()){
@@ -61,7 +60,7 @@ void MainTabPage::resizeEvent(QResizeEvent *event){
             //layerSet[i]->setGeometry(0,0,w,h);
             layerSet[i]->clear();
             layerSet[i]->setPixmap(buf->scaled(w,h,Qt::KeepAspectRatio));
-            bufSize = buf->scaled(w,h,Qt::KeepAspectRatio).size();
+            this->bufSize = buf->scaled(w,h,Qt::KeepAspectRatio).size();
             qDebug() << bufSize;
             layerSet[i]->show();
         }
@@ -90,18 +89,88 @@ bool MainTabPage::eventFilter(QObject* object, QEvent *event){\
             }
             if(event->type() == QMouseEvent::MouseButtonDblClick){
                 // layer 저장
-                dbClicked = true;
                 QString style= " ";
                 QLabel* tmpLabel = this->textSet.at(this->activeText);
                 tmpLabel->setStyleSheet(style);
+
+                this->createTextLayerPix();
+                emit addTextLayer(this->textPix, tmpLabel);
+
+                this->dbClicked = true;
                 this->textInputStart = false;
                 this->textInput = false;
                 this->originPos = QPoint(0,0);
                 this->prevPos = QPoint(0,0);
             }
         }
+        else if(list[0] == "icon"){
+            this->currentIconNum = list[1].toInt();
+            if(event->type() == QMouseEvent::MouseButtonPress){
+                this->iconClicked = true;
+            }
+            if(event->type() == QMouseEvent::MouseButtonDblClick){
+                QString style = "";
+                this->iconSet.at(this->currentIconNum)->setStyleSheet(style);
+                QLabel* tmpLabel = new QLabel();
+                this->createIconLayerPix();
+                emit addTextLayer(this->clickedIcon, tmpLabel);
+                this->iconSet.at(this->currentIconNum)->setVisible(false);
+                this->iconClicked = false;
+            }
+        }
     }
     return QWidget::eventFilter(object, event);
+}
+
+void MainTabPage::createTextLayerPix(){
+    changePoint(this->textStart);
+    changePoint(this->textEnd);
+    QPixmap *origin = this->layerInfo->at(0);
+    QSize originSize = origin->size();
+
+    QImage* finalImg = new QImage(originSize, QImage::Format_ARGB32);
+    finalImg->fill(Qt::transparent);
+    int w = abs(this->textStart.x() - this->textEnd.x());
+    int h = abs(this->textStart.y() - this->textEnd.y());
+    QImage tmp = this->textPix->scaled(w,h,Qt::KeepAspectRatio).toImage();
+    int x = 0, y = 0;
+    for(int i = min(this->textStart.x(), this->textEnd.x()); i<max(this->textStart.x(),this->textEnd.x()); i++){
+        for(int j = min(this->textStart.y(), this->textEnd.y()); j < max(this->textStart.y(), this->textEnd.y()); j++){
+            finalImg->setPixel(i,j,tmp.pixel(x,y));
+            y++;
+        }
+        x++;
+        y = 0;
+    }
+    *this->textPix = QPixmap::fromImage(*finalImg);
+}
+
+void MainTabPage::createIconLayerPix(){
+    QPoint endPoint = this->droppedPoint;
+    endPoint.setX(endPoint.x() + iconSize.width());
+    endPoint.setY(endPoint.y() + iconSize.height());
+    changePoint(this->droppedPoint);
+    changePoint(endPoint);
+
+    QPixmap *origin = this->layerInfo->at(0);
+    QSize originSize = origin->size();
+
+    QImage* finalImg = new QImage(originSize, QImage::Format_ARGB32);
+    finalImg->fill(Qt::transparent);
+    int w = abs(this->droppedPoint.x() - endPoint.x());
+    int h = abs(this->droppedPoint.y() - endPoint.y());
+    QImage tmp = this->iconPixSet.at(this->currentIconNum).scaled(w,h,Qt::KeepAspectRatio).toImage();
+    int x =0; int y= 0;
+    for(int i=this->droppedPoint.x(); i< endPoint.x(); i++){
+        for(int j=this->droppedPoint.y(); j<endPoint.y(); j++){
+            finalImg->setPixel(i,j,tmp.pixel(x,y));
+            y++;
+        }
+        x++;
+        y= 0;
+    }
+    this->clickedIcon = new QPixmap(originSize);
+    *this->clickedIcon = QPixmap::fromImage(*finalImg);
 }
 
 void MainTabPage::keyPressEvent(QKeyEvent *event){
@@ -120,8 +189,10 @@ void MainTabPage::keyPressEvent(QKeyEvent *event){
            textInputted += event->text();
         }
         this->inputtedTextList.at(this->activeText) = textInputted;
+
         this->textPix = new QPixmap(tmpLabel->width(), tmpLabel->height());
         this->textPix->fill(Qt::transparent);
+
         QPainter painter(this->textPix);
         int R, G, B, A;
         R = this->tools->textW->textR;
@@ -145,7 +216,7 @@ void MainTabPage::keyReleaseEvent(QKeyEvent *event){
     }
 }
 void MainTabPage::wheelEvent(QWheelEvent *event){
-    if(ctrlKey){
+    if(ctrlKey && this->clickedTool == 6){
         const double degree = event->delta() / 12.0;
         int w = this->w * (degree/100);
         int h = this->h * (degree/100);
@@ -159,24 +230,56 @@ void MainTabPage::wheelEvent(QWheelEvent *event){
             bufSize = buf->scaled(w,h,Qt::KeepAspectRatio).size();
         }
     }
+    else if(ctrlKey && this->clickedTool == 0){
+        const double degree = event->delta() / 12.0;
+        int w = this->iconSize.width() * (degree/100.0);
+        int h = this->iconSize.height() * (degree/100.0);
+
+        w += iconSize.width();
+        h += iconSize.height();
+
+        iconSize.setWidth(w);
+        iconSize.setHeight(h);
+
+        QLabel* tmpLayer = this->iconSet.at(this->currentIconNum);
+        tmpLayer->clear();
+        QPoint tmp = this->droppedPoint;
+        tmp.setX(tmp.x() + iconSize.width());
+        tmp.setY(tmp.y() + iconSize.height());
+        QRect iconRect(this->droppedPoint, tmp);
+        tmpLayer->setGeometry(iconRect);
+        tmpLayer->setPixmap(iconPixSet.at(this->currentIconNum).scaled(w,h, Qt::KeepAspectRatio));
+        tmpLayer->show();
+
+        //qDebug() << "wheel";
+    }
+
+}
+
+void MainTabPage::changePoint(QPoint &point){
+    QSize widgetSize = this->layerSet.at(0)->size();
+    if(this->bufSize.width() > this->bufSize.height()){
+        point.setY((int)point.y() - ((widgetSize.height()- bufSize.height())/2));
+        double ratio = (double)(this->layerInfo->at(0)->size().height()) / (double)bufSize.height();
+        point.setX((int)(point.x() * ratio));
+        point.setY((int)(point.y() * ratio));
+    }
+    else{
+        point.setX((int)point.x() - ((widgetSize.width() - bufSize.width())/2));
+        double ratio = (double)(this->layerInfo->at(0)->size().height()) / (double)bufSize.height();
+        point.setX((int)(point.x() * ratio));
+        point.setY((int)(point.y() * ratio));
+    }
 }
 
 void MainTabPage::mousePressEvent(QMouseEvent *event){
     this->prevPos = QPoint(0,0);
-    QSize widgetSize = this->layerSet.at(0)->size();
     if(event->button() == Qt::LeftButton){
-        if(this->layerInfo->at(this->currentBufNum)->width() > this->layerInfo->at(this->currentBufNum)->height()){
-            //double ratio = bufSize.height() / (double)widgetSize.height();
-            originPos.setY((int)(event->y() - ((widgetSize.height()-bufSize.height())/2)));
-            originPos.setX(event->x());
-        }
-        else {
-            //double ratio = bufSize.width() / (double)widgetSize.width();
-            originPos.setX((int)(event->x() - ((widgetSize.width()-bufSize.width())/2)));
-            originPos.setY(event->y());
-        }
-        clicked = true;
+        this->originPos = event->pos();
+        changePoint(this->originPos);
 
+        clicked = true;
+        qDebug() << "test";
         if(this->clickedTool == 3 && !textInput){
             this->textStart = event->pos();
         }
@@ -184,24 +287,17 @@ void MainTabPage::mousePressEvent(QMouseEvent *event){
 }
 
 void MainTabPage::mouseMoveEvent(QMouseEvent *event){
-    QSize widgetSize = this->layerSet.at(0)->size();
     if((event->buttons() & Qt::LeftButton)){
-        if(this->layerInfo->at(this->currentBufNum)->width() > this->layerInfo->at(this->currentBufNum)->height()){
-            //double ratio = bufSize.height() / (double)widgetSize.height();
-            prevPos = originPos;
-            originPos.setY((int)(event->y() - ((widgetSize.height()-bufSize.height())/2)));
-            originPos.setX(event->x());
-        }
-        else {
-            //double ratio = bufSize.width() / (double)widgetSize.width();
-            originPos.setX((int)(event->x() - ((widgetSize.width()-bufSize.width())/2)));
-            originPos.setY(event->y());
-        }
+        this->prevPos = this->originPos;
+        this->originPos = event->pos();
+        changePoint(this->originPos);
+
         clicked = true;
+        qDebug() << "test";
         if(this->clickedTool == 1){
             // brush
             QPixmap* tmpBuf = this->layerInfo->at(this->currentBufNum);
-            *tmpBuf = tmpBuf->scaled(bufSize.width(), bufSize.height(), Qt::KeepAspectRatio);
+            //QPixmap paintBuf = tmpBuf->scaled(bufSize.width(), bufSize.height(), Qt::KeepAspectRatio);
             QPainter painter(tmpBuf);
             int R, G, B, size;
             this->tools->brushW->getRGB(R, G, B);
@@ -211,7 +307,6 @@ void MainTabPage::mouseMoveEvent(QMouseEvent *event){
         else if(this->clickedTool == 4){
             // eraser
             QPixmap* tmpBuf = this->layerInfo->at(this->currentBufNum);
-            *tmpBuf = tmpBuf->scaled(bufSize.width(), bufSize.height(), Qt::KeepAspectRatio);
             QPainter painter(tmpBuf);
             this->draw(painter, 255, 255, 255, this->tools->eraseW->eraserSize);
         }
@@ -219,7 +314,7 @@ void MainTabPage::mouseMoveEvent(QMouseEvent *event){
             this->textEnd = event->pos();
         }
     }
-    this->update();
+    //this->update();
 }
 
 void MainTabPage::mouseReleaseEvent(QMouseEvent *event){
@@ -238,10 +333,8 @@ void MainTabPage::mouseReleaseEvent(QMouseEvent *event){
         QRect textRect(this->textStart, this->textEnd);
         text->setGeometry(textRect);
         if(this->activeText != -1)
-            this->textSet.at(this->activeText)->setStyleSheet(style2);
+            this->textSet.at(this->activeText)->setVisible(false);
         text->setStyleSheet(style);
-        if(this->tools->textW->isFontChanged)
-            text->setFont(this->tools->textW->textFont);
         text->show();
         this->activeText = this->textSet.size();
         text->setObjectName("text_"+QString::number(this->activeText));
@@ -253,30 +346,6 @@ void MainTabPage::mouseReleaseEvent(QMouseEvent *event){
         dbClicked = false;
 }
 
-//void MainTabPage::setTextColor(QLabel* text){
-//    QBrush* textBrush = new QBrush(QColor(this->tools->textW->textR, this->tools->textW->textG, this->tools->textW->textB, this->tools->textW->textA));
-//    QBrush* back = new QBrush(QColor(this->tools->textW->backR, this->tools->textW->backG, this->tools->textW->backB, this->tools->textW->backA));
-//    textBrush->setStyle(Qt::SolidPattern);
-//    back->setStyle(Qt::SolidPattern);
-
-//    QPalette pText;
-//    QPalette pBack;
-
-//    pText.setBrush(QPalette::Active, QPalette::WindowText, *(textBrush));
-//    pText.setBrush(QPalette::Inactive, QPalette::WindowText, *(textBrush));
-
-//    pBack.setBrush(QPalette::Active, QPalette::Window, *(back));
-//    pBack.setBrush(QPalette::Inactive, QPalette::Window, *(back));
-
-//    text->setPalette(pText);
-//    text->show();
-//    text->setPalette(pBack);
-//    text->show();
-//}
-
-//void MainTabPage::paintEvent(QPaintEvent *event){
-
-//}
 
 void MainTabPage::draw(QPainter &painter, int R, int G, int B, int size){
     painter.setRenderHint(QPainter::Antialiasing, true);
@@ -285,14 +354,13 @@ void MainTabPage::draw(QPainter &painter, int R, int G, int B, int size){
     this->G = G;
     this->B = B;
     this->penColor.setRgb(this->R, this->G, this->B);
-    this->penColor.setRgb(this->R, this->G, this->B);
     this->paintPen.setColor(this->penColor);
     this->paintPen.setWidth(this->penSize);
     painter.setPen(this->paintPen);
     if(prevPos == QPoint(0,0))
         return;
     painter.drawLine(this->prevPos, this->originPos);
-
+    painter.end();
     QPixmap buff= sumBuff();
     this->setLayerPixel(&buff);
 }
@@ -334,6 +402,8 @@ void MainTabPage::getLayerInfo(QLabel*& layer, int index){
 
 void MainTabPage::setLayerPixel(QPixmap* buf){
     QLabel* label = this->layerSet.at(0);
+    //*this->buf = buf->copy();
+    //this->buf = buf;
     int w = label->width();
     int h = label->height();
     label->clear();
@@ -343,6 +413,8 @@ void MainTabPage::setLayerPixel(QPixmap* buf){
 
 void MainTabPage::dropEvent(QDropEvent *event)
 {
+    // 저장하는 코드 작성
+    // 저장되는 QPoint : 원래 mainTabPage 좌표
     if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
         QByteArray itemData = event->mimeData()->data("application/x-dnditemdata");
         QDataStream dataStream(&itemData, QIODevice::ReadOnly);
@@ -350,14 +422,28 @@ void MainTabPage::dropEvent(QDropEvent *event)
         QPixmap pixmap;
         QPoint offset;
         dataStream >> pixmap >> offset;
-        pixmap.save("debug/test.png","PNG");
+        //pixmap.save("debug/test.png","PNG");
 
+        this->droppedPoint = event->pos();
+        QPoint tmp = droppedPoint;
+        this->iconSize = pixmap.size();
+        tmp.setX(tmp.x() + iconSize.width());
+        tmp.setY(tmp.y() + iconSize.height());
+        qDebug() << droppedPoint;
+        QString style = "border-color:rgb(0,0,0); border-width:1.2px; border-style:solid;";
+        QLabel* icon = new QLabel(this);
+        icon->setObjectName("icon_"+QString::number(++this->currentIconNum));
+        icon->installEventFilter(this);
+        icon->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
-        /*QLabel *newIcon = new QLabel(this);
-        newIcon->setPixmap(pixmap);
-        newIcon->move(event->pos() - offset);
-        newIcon->show();
-        newIcon->setAttribute(Qt::WA_DeleteOnClose);*/
+        QRect iconRect(droppedPoint, tmp);
+        icon->setGeometry(iconRect);
+        icon->setStyleSheet(style);
+        icon->setPixmap(pixmap);
+        icon->show();
+
+        this->iconSet.push_back(icon);
+        this->iconPixSet.push_back(pixmap);
 
         if (event->source() == this) {
             event->setDropAction(Qt::MoveAction);
@@ -373,6 +459,7 @@ void MainTabPage::dropEvent(QDropEvent *event)
 void MainTabPage::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
+
         if (event->source() == this) {
             event->setDropAction(Qt::MoveAction);
             event->accept();
@@ -387,10 +474,12 @@ void MainTabPage::dragEnterEvent(QDragEnterEvent *event)
 void MainTabPage::dragMoveEvent(QDragMoveEvent *event)
 {
     if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
+
         if (event->source() == this) {
             event->setDropAction(Qt::MoveAction);
             event->accept();
         } else {
+
             event->acceptProposedAction();
         }
     } else {

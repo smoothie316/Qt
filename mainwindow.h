@@ -51,6 +51,7 @@ private slots:
 public slots:
     void drawEnd();
     void addTextLayer(QPixmap* pix, QLabel* label);
+    void currentBufSize(QSize bufSize);
 
 // 함수 
 public:
@@ -96,6 +97,7 @@ private:
     // value : layer(label) instance and buffer info pair list
     map<int, vector<QPixmap*> >  layerInfo;
     map<int, vector<QLabel*> > labelInfo;
+    QSize bufSize;
 
     QString className;
 };

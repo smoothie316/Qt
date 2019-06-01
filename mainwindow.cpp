@@ -38,6 +38,10 @@ MainWindow::~MainWindow(){
     delete ui;
 }
 
+void MainWindow::currentBufSize(QSize bufSize){
+    this->bufSize = bufSize;
+}
+
 bool MainWindow::eventFilter(QObject* object, QEvent* event){
     if(event->type() == QMouseEvent::MouseButtonPress){
         //마우스 클릭 이벤트 발생시
@@ -55,9 +59,7 @@ void MainWindow::drawEnd(){
     for(int i=0; i<this->labelInfo.at(this->currentPage).size(); i++){
         //this->labelInfo.at(this->currentPage).at(i)->clear();
         this->labelInfo.at(this->currentPage).at(i)->setPixmap(
-                    (this->layerInfo.at(this->currentPage).at(i))->scaled(this->labelInfo.at(this->currentPage).at(i)->width(),
-                                                                          this->labelInfo.at(this->currentPage).at(i)->height(),
-                                                                          Qt::KeepAspectRatio));
+                    (this->layerInfo.at(this->currentPage).at(i))->scaled(this->ui->LayerWidget->currentWidget()->size(), Qt::KeepAspectRatio));
         this->labelInfo.at(this->currentPage).at(i)->show();
     }
     QPixmap buff = sumBuff();
@@ -74,7 +76,7 @@ void MainWindow::addMainTab(QWidget* page, QString name){
 
     this->totalPages++;
     this->tabs->mainPageList.at(this->totalPages)->tools = this->tools;
-    vector<QPixmap*> tmpVec;
+
     QWidget* widget = new QWidget();
     QGridLayout* grid = new QGridLayout();
     QLabel* tmpLayer = new QLabel(widget);
@@ -84,24 +86,25 @@ void MainWindow::addMainTab(QWidget* page, QString name){
     this->tabs->getBuff(tmpBuf, this->totalPages);
     tmpLayer->setPixmap(tmpBuf->scaled(ui->LayerWidget->width(), ui->LayerWidget->height(), Qt::KeepAspectRatio));
     tmpLayer->show();
-    tmpVec.push_back(tmpBuf);
-    this->layerInfo.insert(make_pair(this->totalPages, tmpVec));
+
     tmpLayer->setObjectName(QString::number(this->totalPages)+ "," + QString::number(0));
     tmpLayer->setStyleSheet(style);
-    this->tabs->mainPageList.at(this->totalPages)->layerInfo =
-            &(this->layerInfo.at(this->totalPages));
+
     //bufImage 폴더에 임시 저장
     QStringList nameList = name.split("/");
     int listCount = name.split("/").length()-1;
     QString filename ="debug/bufImage/"+ nameList[listCount];
     tmpBuf->save(filename,"PNG");
-    qDebug() << filename;
 
-    grid->addWidget(tmpLayer);
-    widget->setLayout(grid);
+    vector<QPixmap*> tmpVec;
+    tmpVec.push_back(tmpBuf);
     vector<QLabel*> tmpLabelVec;
     tmpLabelVec.push_back(tmpLayer);
+    this->layerInfo.insert(make_pair(this->totalPages, tmpVec));
     this->labelInfo.insert(make_pair(this->totalPages, tmpLabelVec));
+    this->tabs->mainPageList.at(this->totalPages)->layerInfo = &(this->layerInfo.at(this->totalPages));
+    grid->addWidget(tmpLayer);
+    widget->setLayout(grid);
     ui->LayerWidget->addWidget(widget);
     ui->MainTab->addTab(page, name);
 }
@@ -151,16 +154,18 @@ void MainWindow::on_LayerCreate_clicked(){
     QString style = "border-color:rgb(0,0,0); border-width:1.2px; border-style:solid;";
 
     QPixmap *origin = this->layerInfo.at(this->currentPage).at(0);
-    QPixmap* tmpPix = new QPixmap(origin->width(), origin->height());
-    QImage* tmpImg = new QImage(origin->width(), origin->height(), QImage::Format_ARGB32_Premultiplied);
+    QSize originSize = origin->size();
+    QPixmap* tmpPix = new QPixmap();
+    QImage* tmpImg = new QImage(originSize, QImage::Format_ARGB32_Premultiplied);
     tmpImg->fill(Qt::transparent);
     *tmpPix = QPixmap::fromImage(*tmpImg);
 
-    this->currentBufNum++;
+    //this->currentBufNum++;
+    this->currentBufNum = this->layerInfo.at(this->currentPage).size();
     qDebug() << this->currentBufNum;
     QWidget* widget = this->ui->LayerWidget->currentWidget();
     QLabel* tmpLayer = new QLabel(widget);
-    tmpLayer->setPixmap(tmpPix->scaled(ui->LayerWidget->width(), ui->LayerWidget->height(), Qt::KeepAspectRatio));
+    tmpLayer->setPixmap(tmpPix->scaled(ui->LayerWidget->currentWidget()->size(), Qt::KeepAspectRatio));
     tmpLayer->setObjectName(QString::number(this->currentPage)+ "," + QString::number(this->currentBufNum));
     this->layerInfo.at(this->currentPage).push_back(tmpPix);
     this->labelInfo.at(this->currentPage).push_back(tmpLayer);
@@ -173,10 +178,23 @@ void MainWindow::on_LayerCreate_clicked(){
     emit resetPixmap(&buff, this->currentPage);
 }
 
-
 void MainWindow::addTextLayer(QPixmap* pix, QLabel* label){
+    QString style = "border-color:rgb(0,0,0); border-width:1.2px; border-style:solid;";
+    QLabel* tmpLayer = new QLabel();
+    tmpLayer->setPixmap(pix->scaled(ui->LayerWidget->currentWidget()->size(), Qt::KeepAspectRatio));
+    this->currentBufNum = this->layerInfo.at(this->currentPage).size();
+    tmpLayer->setObjectName(QString::number(this->currentPage) + "," + QString::number(this->currentBufNum));
+    this->layerInfo.at(this->currentPage).push_back(pix);
+    this->labelInfo.at(this->currentPage).push_back(tmpLayer);
+    tmpLayer->installEventFilter(this);
+    tmpLayer->setStyleSheet(style);
 
+    ui->LayerWidget->currentWidget()->layout()->addWidget(tmpLayer);
+
+    QPixmap buff = sumBuff();
+    emit resetPixmap(&buff, this->currentPage);
 }
+
 void MainWindow::on_LayerDel_clicked(){
     // 레이어 삭제 (delete 버튼)
     QWidget* widget = this->labelInfo.at(this->currentPage).at(this->currentBufNum);
@@ -288,6 +306,7 @@ void MainWindow::on_FileOpen_clicked(){
 }
 void MainWindow::on_Lasso_clicked(){
     this->recentClickedTool = 0;
+    this->tabs->mainPageList.at(this->currentPage)->clickedTool = this->recentClickedTool;
     this->tools->keyword->clicked();
 }
 void MainWindow::on_Brush_clicked(){

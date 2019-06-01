@@ -18,7 +18,6 @@
 #include <ToolBtn/toolbtn.h>
 #include <colorselect.h>
 
-
 using namespace std;
 class QDropEvent;
 namespace Ui {
@@ -31,17 +30,29 @@ class MainTabPage : public QWidget
 signals:
     void drawEnd();
     void addTextLayer(QPixmap* pix, QLabel* label);
+    void currentBufSize(QSize bufSize);
 public:
     explicit MainTabPage(QWidget *parent = nullptr);
     ~MainTabPage() override;
 
+public:
+    void setImage(QPixmap *bufferm, int w, int h);
+    void setLayerInfo(vector<QLabel*> layerList);
+    void setLayerPixel(QPixmap* buf);
+    QPixmap sumBuff();
+
+    void getAllLayerInfo(vector<QLabel*>& layerList);
+    void getLayerInfo(QLabel*& layer, int index);
+
+    void addLayer();
+    void setMouseCursor();
+
 protected:
     void resizeEvent(QResizeEvent* event) override;
-    bool eventFilter(QObject *object, QEvent *event);
-    //virtual void   mouseDoubleClickEvent ( QMouseEvent * event );
-    virtual void mouseMoveEvent ( QMouseEvent * event ) override;
+    bool eventFilter(QObject *object, QEvent *event) override;
+    void mouseMoveEvent ( QMouseEvent * event ) override;
     virtual void mousePressEvent ( QMouseEvent * event ) override;
-    virtual void mouseReleaseEvent ( QMouseEvent * event ) override;
+    void mouseReleaseEvent ( QMouseEvent * event ) override;
     virtual void keyPressEvent(QKeyEvent* event) override;
     virtual void keyReleaseEvent(QKeyEvent* event) override;
     virtual void wheelEvent(QWheelEvent *event) override;
@@ -53,24 +64,25 @@ protected:
 private:
     void adjustScrollBar(QScrollBar* scrollBar, int factor);
     void draw(QPainter &painter, int R, int G, int B, int size);
-    //void setTextColor(QLabel* text);
+    void changePoint(QPoint& point);
+    void createTextLayerPix();
+    void createIconLayerPix();
 private slots:
 
 private:
     Ui::MainTabPage *ui;
-    QPixmap* buf;
-    QPixmap* cursorPix;
+
+    //QPixmap* cursorPix;
     vector<QLabel*> layerSet;
     vector<QLabel*> textSet;
     vector<QString> inputtedTextList;
     bool ctrlKey =false;
 
+    QPixmap* buf;
     int w, h;
-    int originW, originH;
+    QSize bufSize; // 화면에 표시되는 이미지 크기
 
-    QSize bufSize;
-    bool clicked = false;
-
+    bool clicked = false; // 마우스 이벤트용
     QColor penColor;
     QPen paintPen;
     int R, G, B;
@@ -81,8 +93,20 @@ private:
     bool textInputStart = false;
     bool dbClicked = false;
     QPixmap* textPix;
+
+    vector<QLabel*> iconSet;
+    vector<QPixmap> iconPixSet;
+    QPixmap* clickedIcon;
+    int currentIconNum = -1;
+    bool iconClicked =false;
+    QSize iconSize;
+    QPoint droppedPoint;
+
+    bool sizeInit = false;
+    int resizeNum = 0;
 public:
     /*
+    Lasso : 0
     Brush : 1
     Paint : 2
     Text  : 3
@@ -97,17 +121,6 @@ public:
     QPoint originPos, prevPos;
     QPoint textStart, textEnd;
 
-public:
-    void setImage(QPixmap *bufferm, int w, int h);
-    void setLayerInfo(vector<QLabel*> layerList);
-    void setLayerPixel(QPixmap* buf);
-    QPixmap sumBuff();
-
-    void getAllLayerInfo(vector<QLabel*>& layerList);
-    void getLayerInfo(QLabel*& layer, int index);
-
-    void addLayer();
-    void setMouseCursor();
 
 };
 

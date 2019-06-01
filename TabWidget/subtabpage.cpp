@@ -115,7 +115,8 @@ void SubTabPage::mousePressEvent(QMouseEvent *event){
         QDrag *drag = new QDrag(this);
         drag->setMimeData(mimeData);
         drag->setPixmap(pixmap);
-        drag->setHotSpot(event->pos() - child->pos());
+        // 계산 필요
+        //drag->setHotSpot(event->pos() - child->pos());
 
         QPixmap tempPixmap = pixmap;
         QPainter painter;
