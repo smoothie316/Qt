@@ -350,3 +350,9 @@ void MainWindow::setEndByTools(){
 }
 
 
+
+void MainWindow::on_FileSave_clicked()
+{
+    QString dir = QFileDialog::getSaveFileName(this, "Save", QDir::homePath(), "*.png");
+    this->tabs->mainPageList.at(this->currentPage)->saveImage(dir);
+}
