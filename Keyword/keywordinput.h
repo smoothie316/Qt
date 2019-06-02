@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QProcess>
+#include <loadingdialog.h>
 
 namespace Ui {
 class KeywordInput;
@@ -34,6 +35,7 @@ protected:
 
 private:
     Ui::KeywordInput *ui;
+    LoadingDialog *lDialog;
     QString _className;
 //QProcess *processEXE;
 };

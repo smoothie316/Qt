@@ -11,20 +11,29 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>로딩중</string>
   </property>
-  <widget class="QLabel" name="label">
+  <property name="modal">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>80</y>
-     <width>331</width>
-     <height>121</height>
+     <x>130</x>
+     <y>110</y>
+     <width>160</width>
+     <height>80</height>
     </rect>
    </property>
-   <property name="text">
-    <string>로딩중</string>
-   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>로딩중</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

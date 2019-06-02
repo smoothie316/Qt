@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    loadingdialog.cpp \
         main.cpp \
         mainwindow.cpp \
         FileIO/fileclass.cpp \
@@ -43,6 +44,7 @@ SOURCES += \
 
 
 HEADERS += \
+    loadingdialog.h \
         mainwindow.h \
         FileIO/fileclass.h \
         TabWidget/maintabpage.h \
@@ -59,6 +61,7 @@ HEADERS += \
 
 
 FORMS += \
+    loadingdialog.ui \
         mainwindow.ui \
         TabWidget/maintabpage.ui \
         Keyword/keywordinput.ui \
