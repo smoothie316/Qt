@@ -285,6 +285,7 @@ void MainWindow::on_MainTab_currentChanged(int index){
     if(index != -1){
         this->currentPage = index;
         ui->LayerWidget->setCurrentIndex(this->currentPage + 1);
+        this->tabs->mainPageList.at(this->currentPage)->clickedTool = this->recentClickedTool;
     }
 }
 void MainWindow::setSubPageName(QString name){
