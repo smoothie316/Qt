@@ -48,6 +48,8 @@ private slots:
     //void dropEvent(QDropEvent *event) override;
     //void mousePressEvent(QMouseEvent *event) override;
 
+    void on_FileSave_clicked();
+
 public slots:
     void drawEnd();
     void addTextLayer(QPixmap* pix, QLabel* label);

@@ -15,7 +15,7 @@ MainTabPage::MainTabPage(QWidget *parent) :
     connect(this, SIGNAL(currentBufSize(QSize)), parent, SLOT(currentBufSize(QSize)));
 
     this->buf= nullptr;
-    this->clickedTool = 1;
+    this->clickedTool = -1;
     this->setMouseCursor();
     this->w = 0;
     this->h = 0;
@@ -28,6 +28,11 @@ MainTabPage::MainTabPage(QWidget *parent) :
 MainTabPage::~MainTabPage()
 {
     delete ui;
+}
+
+void MainTabPage::saveImage(QString dir){
+    QPixmap buf = this->sumBuff();
+    buf.save(dir);
 }
 
 void MainTabPage::setImage(QPixmap* buffer, int w, int h){

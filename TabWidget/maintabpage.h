@@ -47,6 +47,8 @@ public:
     void addLayer();
     void setMouseCursor();
 
+    void saveImage(QString dir);
+
 protected:
     void resizeEvent(QResizeEvent* event) override;
     bool eventFilter(QObject *object, QEvent *event) override;
