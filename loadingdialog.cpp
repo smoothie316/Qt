@@ -11,6 +11,7 @@ LoadingDialog::LoadingDialog(QWidget *parent) :
     ui(new Ui::LoadingDialog)
 {
     ui->setupUi(this);
+    ui->label->setText("진행중");
 //    QString filePath = QApplication::applicationDirPath();
 
 //    QMovie *Movie=new QMovie(filePath + "circleloader.gif");

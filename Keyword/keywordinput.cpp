@@ -60,11 +60,12 @@ void KeywordInput::on_bnAdd_clicked()
     // 실행 파일의 경로를 설정 한다.
     QString _exePath = "debug//lassoFunction//lasso.exe";
     QProcess *processEXE = new QProcess(this);
-    LoadingDialog lDialog;
+    lDialog = new LoadingDialog(this);
+    //LoadingDialog lDialog;
     // 실행 파일이 있는지 체크 한다.
+    lDialog->show();
     if (QFile::exists(_exePath))
     {
-        //lDialog.show();
     // 실행 파일이 정상적으로 존재 한다면 QProcess 생성
     // 비교를 하는 이유는 다른 곳에서 생성했을 수도 있다.
 
@@ -84,7 +85,7 @@ void KeywordInput::on_bnAdd_clicked()
     // 아규먼트가 불필요 하다면 ...
     // processEXE->start(_exePath);
     }
-    lDialog.close();
+    lDialog->close();
     qDebug() << "DONE";
     emit className(this->_className);
 }
