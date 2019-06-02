@@ -7,6 +7,7 @@
         <file>res/lasso.png</file>
         <file>res/paint.jpeg</file>
         <file>res/resize.jpeg</file>
+        <file>res/smoothie.png</file>
     </qresource>
     <qresource prefix="/Class">
         <file>coco.txt</file>
