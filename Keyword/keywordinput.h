@@ -35,7 +35,7 @@ protected:
 private:
     Ui::KeywordInput *ui;
     QString _className;
-    QProcess *processEXE;
+//QProcess *processEXE;
 };
 
 #endif // KEYWORDINPUT_H
